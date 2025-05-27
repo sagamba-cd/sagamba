@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Property Management System</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .main-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .nav-menu {
+            background-color: var(--secondary-color);
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-bg);
+            padding: 20px;
+        }
+        
+        .stats-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .stats-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar-menu img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            flex-grow: 1;
+            max-width: 500px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .property-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .property-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .property-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .property-table tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        
+        .property-table tr:hover {
+            background-color: #e0f2f1;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-occupied {
+            background-color: #e6f7ee;
+            color: var(--success-color);
+        }
+        
+        .status-vacant {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .status-pending {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: var(--info-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.85em;
+            transition: background-color 0.3s;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: var(--accent-color);
+        }
+
+        /* Style for dropdown items */
+        .view-action {
+            color: var(--info-color);
+        }
+
+        .edit-action {
+            color: var(--warning-color);
+        }
+
+        .delete-action {
+            color: var(--danger-color);
+        }
+        
+        .footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+            
+            .stats-box {
+                width: 45%;
+                margin: 5px;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                max-width: 100%;
+            }
+            
+            /* Mobile dropdown styles */
+            .dropdown-content {
+                position: static;
+                width: 100%;
+            }
+        
+            .dropdown:hover .dropdown-content {
+                display: none;
+            }
+        
+            .dropdown-content.show {
+                display: block;
+            }
+        
+            .dropbtn::after {
+                content: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Property Management Header">
+        </header>
+        
+        <nav class="nav-menu">
+            <a href="promanager.html">Home</a>
+            <a href="tenant4.html">Tenants Portal</a>
+            <a href="propertymange2.html" class="active">Property Management</a>
+        </nav>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <div class="stats-box">
+                    <div class="stats-title">TOTAL PROPERTIES</div>
+                    <div class="stats-value" id="totalProperties">0</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">OCCUPIED PROPERTIES</div>
+                    <div class="stats-value" id="occupiedProperties">0</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">VACANT PROPERTIES</div>
+                    <div class="stats-value" id="vacantProperties">0</div>
+                </div>
+                
+                <ul class="sidebar-menu">
+                    <li><a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                        <img src="photo/news.jpeg" alt="News"> News
+                    </a></li>
+                    <li><a href="notification.html">
+                        <img src="photo/icon.gif" alt="Notifications"> Notifications
+                    </a></li>
+                    <li><a href="#">
+                        <img src="photo/help.gif" alt="Help"> Help Center
+                    </a></li>
+                </ul>
+            </aside>
+            
+            <main class="main-content">
+                <h1>PROPERTY MANAGEMENT</h1>
+                <h2>MY PROPERTIES</h2>
+                
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search properties..." class="search-input">
+                    <button id="searchBtn" class="btn btn-primary">Search</button>
+                    <a href="property2.html" class="btn btn-primary">Add New Property</a>
+                </div>
+                
+                <table class="property-table" id="propertyTable">
+                    <thead>
+                        <tr>
+                            <th>Property ID</th>
+                            <th>Landlord ID</th>
+                            <th>Type</th>
+                            <th>Size (sqm)</th>
+                            <th>Rent Amount (RWF)</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertyTableBody">
+                        <!-- Property data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            &copy; 2023 Property Management System | sagambalumsgabby
+        </footer>
+    </div>
+
+    <script>
+        // Property data
+        const properties = [
+            {
+                id: "PR-001",
+                landlordId: "LL-001",
+                type: "Office",
+                size: 120,
+                rentAmount: 300000,
+                address: "KN 123 St, Kigali",
+                status: "Occupied"
+            },
+            {
+                id: "PR-002",
+                landlordId: "LL-002",
+                type: "Retail",
+                size: 80,
+                rentAmount: 250000,
+                address: "KK 456 Ave, Kigali",
+                status: "Vacant"
+            },
+            {
+                id: "PR-003",
+                landlordId: "LL-001",
+                type: "Warehouse",
+                size: 500,
+                rentAmount: 750000,
+                address: "KG 789 Rd, Kigali",
+                status: "Occupied"
+            },
+            {
+                id: "PR-004",
+                landlordId: "LL-003",
+                type: "Apartment",
+                size: 90,
+                rentAmount: 180000,
+                address: "KN 321 St, Kigali",
+                status: "Vacant"
+            },
+            {
+                id: "PR-005",
+                landlordId: "LL-002",
+                type: "Commercial Space",
+                size: 150,
+                rentAmount: 400000,
+                address: "KG 654 Ave, Kigali",
+                status: "Pending"
+            }
+        ];
+
+        // DOM elements
+        const propertyTableBody = document.getElementById('propertyTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const totalPropertiesEl = document.getElementById('totalProperties');
+        const occupiedPropertiesEl = document.getElementById('occupiedProperties');
+        const vacantPropertiesEl = document.getElementById('vacantProperties');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPropertyTable(properties);
+            updateStatistics();
+            
+            // Event listeners
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+
+        // Render property table
+        function renderPropertyTable(propertiesToRender) {
+            propertyTableBody.innerHTML = '';
+            
+            if (propertiesToRender.length === 0) {
+                propertyTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center;">No properties found matching your search criteria</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            propertiesToRender.forEach(property => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'status-occupied';
+                if (property.status === 'Vacant') statusClass = 'status-vacant';
+                if (property.status === 'Pending') statusClass = 'status-pending';
+                
+                row.innerHTML = `
+                    <td>${property.id}</td>
+                    <td>${property.landlordId}</td>
+                    <td>${property.type}</td>
+                    <td>${property.size}</td>
+                    <td>${property.rentAmount.toLocaleString()}</td>
+                    <td>${property.address}</td>
+                    <td><span class="status ${statusClass}">${property.status}</span></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn">Actions ▼</button>
+                            <div class="dropdown-content">
+                                <a href="#" class="view-action" data-id="${property.id}">View</a>
+                                <a href="#" class="edit-action" data-id="${property.id}">Edit</a>
+                                <a href="#" class="delete-action" data-id="${property.id}">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                propertyTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to dropdown actions
+            document.querySelectorAll('.view-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    viewProperty(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.edit-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    editProperty(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.delete-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    deleteProperty(this.getAttribute('data-id'));
+                });
+            });
+            
+            // For mobile devices - dropdown toggle
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.dropbtn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const dropdown = this.nextElementSibling;
+                        dropdown.classList.toggle('show');
+                    });
+                });
+                
+                // Close dropdowns when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (!e.target.matches('.dropbtn')) {
+                        const dropdowns = document.querySelectorAll('.dropdown-content');
+                        dropdowns.forEach(dropdown => {
+                            if (dropdown.classList.contains('show')) {
+                                dropdown.classList.remove('show');
+                            }
+                        });
+                    }
+                });
+            }
+            
+            updateStatistics();
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = properties.length;
+            const occupied = properties.filter(p => p.status === 'Occupied').length;
+            const vacant = properties.filter(p => p.status === 'Vacant').length;
+            
+            totalPropertiesEl.textContent = total;
+            occupiedPropertiesEl.textContent = occupied;
+            vacantPropertiesEl.textContent = vacant;
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (!searchTerm.trim()) {
+                renderPropertyTable(properties);
+                return;
+            }
+            
+            const filteredProperties = properties.filter(property => {
+                return (
+                    property.id.toLowerCase().includes(searchTerm) ||
+                    property.landlordId.toLowerCase().includes(searchTerm) ||
+                    property.type.toLowerCase().includes(searchTerm) ||
+                    property.address.toLowerCase().includes(searchTerm) ||
+                    property.status.toLowerCase().includes(searchTerm) ||
+                    property.size.toString().includes(searchTerm) ||
+                    property.rentAmount.toString().includes(searchTerm)
+                );
+            });
+            
+            renderPropertyTable(filteredProperties);
+        }
+
+        // View property
+        function viewProperty(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (property) {
+                alert(`Property Details:\n\nID: ${property.id}\nLandlord: ${property.landlordId}\nType: ${property.type}\nSize: ${property.size} sqm\nRent: RWF ${property.rentAmount.toLocaleString()}\nAddress: ${property.address}\nStatus: ${property.status}`);
+            }
+        }
+
+        // Edit property
+        function editProperty(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (property) {
+                alert(`Editing property: ${property.id}\n\nThis would open an edit form in a real application.`);
+                // In a real app, this would open a modal with the property's details for editing
+            }
+        }
+
+        // Delete property
+        function deleteProperty(propertyId) {
+            if (confirm(`Are you sure you want to delete property ${propertyId}?`)) {
+                const index = properties.findIndex(p => p.id === propertyId);
+                if (index !== -1) {
+                    properties.splice(index, 1);
+                    renderPropertyTable(properties);
+                    alert(`Property ${propertyId} has been deleted.`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

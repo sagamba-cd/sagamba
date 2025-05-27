@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management Portal | Tenant System</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --medium-bg: #b2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --table-header: #2c7873;
+            --table-row-odd: #f5f5f5;
+            --table-row-even: #e0f2f1;
+            --warning-color: #f39c12;
+        }
+        
+        body {
+             background: #d2e5e7;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #b2e5e7;
+            border: 1px solid #92d5d7;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1)
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        nav {
+            display: flex;
+            background: #a2e5e7;
+            border-bottom: 2px solid #92d5d7;
+            align-items: center;
+        }
+        
+        .back-btn {
+             padding: 12px 15px;
+            background: #2c7873;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #004445;
+        }
+        
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+        
+        .nav-menu li {
+            margin: 0 10px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: var(--dark-bg);
+            padding: 15px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .stats-box {
+             background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .stats-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .stats-subvalue {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 3px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-active {
+            height: 100%;
+            background-color: var(--success-color);
+        }
+        
+        .progress-inactive {
+            height: 100%;
+            background-color: var(--danger-color);
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--dark-bg);
+            overflow-x: auto;
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .search-bar input {
+            padding: 10px 15px;
+            width: 60%;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+        }
+        
+        .search-bar button {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        
+        .search-results-info {
+            text-align: center;
+            margin: 10px 0;
+            font-style: italic;
+            color: var(--accent-color);
+        }
+        
+        .tenant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tenant-table th {
+            background-color: var(--table-header);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .tenant-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tenant-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+        
+        .tenant-table tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+        
+        .tenant-table tr:hover {
+            background-color: #d1f0eb;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background-color: #e6f7ee;
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 0.8rem;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .action-link {
+            display: block;
+            padding: 8px 12px;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .action-link.view {
+            color: var(--primary-color);
+        }
+        
+        .action-link.edit {
+            color: var(--secondary-color);
+        }
+        
+        .action-link.activate {
+            color: var(--success-color);
+        }
+        
+        .action-link.inactivate {
+            color: var(--warning-color);
+        }
+        
+        .action-link.delete {
+            color: var(--danger-color);
+        }
+        
+        .action-link:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: absolute;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: black;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-actions {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            
+            .stats-box {
+                width: 45%;
+                margin: 5px;
+            }
+            
+            .sidebar a {
+                flex-direction: column;
+                align-items: center;
+                padding: 8px;
+                margin: 0 5px;
+            }
+            
+            .sidebar img {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            .search-bar {
+                flex-direction: column;
+            }
+            
+            .search-bar input {
+                width: 100%;
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            
+            .search-bar button {
+                border-radius: 4px;
+            }
+            
+            .tenant-table {
+                font-size: 0.9rem;
+            }
+            
+            .tenant-table th, 
+            .tenant-table td {
+                padding: 8px;
+            }
+            
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+            }
+            
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .back-btn {
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .nav-menu {
+                justify-content: flex-start;
+            }
+            
+            .dropdown-content {
+                right: auto;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Property Management Header">
+        </header>
+        
+        <nav>
+            
+            <ul class="nav-menu">
+                <li><a href="tenantmanagementsystem.html">Home</a></li>
+                <li><a href="leaser.html">Leasers</a></li>
+                <li><a href="tenants.html" class="active">Tenant Portal</a></li>
+                <li><a href="property management.html">Property Management</a></li>
+                <li><a href="payment.html">Payment Gateway</a></li>
+                <li><a href="sigin.html" class="nav-link">Enter employee</a></li>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="landlords.html" class="nav-link">landlords</a></li>
+            </ul>
+        </nav>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <!-- Tenant Statistics Section -->
+                <div class="stats-box">
+                    <div class="stats-title">TOTAL TENANTS</div>
+                    <div class="stats-value" id="totalTenants">0</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">ACTIVE TENANTS</div>
+                    <div class="stats-value" id="activeTenants">0</div>
+                    <div class="stats-subvalue" id="activePercentage">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-active" id="activeProgress"></div>
+                    </div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">INACTIVE TENANTS</div>
+                    <div class="stats-value" id="inactiveTenants">0</div>
+                    <div class="stats-subvalue" id="inactivePercentage">0%</div>
+                    <div class="progress-bar">
+                        <div class="progress-inactive" id="inactiveProgress"></div>
+                    </div>
+                </div>
+                
+                <a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                    <img src="photo/news.jpeg" alt="News"> News
+                </a>
+                <a href="notification.html" target="_blank">
+                    <img src="photo/icon.gif" alt="Notifications"> Notifications
+                </a>
+                <a href="#" target="_blank">
+                    <img src="photo/help.gif" alt="Help"> Help
+                </a>
+            </aside>
+            
+            <main class="main-content">
+                <h1>TENANT MANAGEMENT PORTAL</h1>
+                <h2>ACTIVE TENANTS</h2>
+                
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search tenants by name, ID, business type, phone or email...">
+                    <button id="searchButton">Search</button>
+                </div>
+                <div id="searchResultsInfo" class="search-results-info"></div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="addTenantBtn">Add New Tenant</button>
+                    <button class="btn btn-primary" id="generateReportBtn">Generate Report</button>
+                    <button class="btn btn-primary" id="clearSearchBtn" style="display: none;">Clear Search</button>
+                </div>
+                
+                <table class="tenant-table" id="tenantTable">
+                    <thead>
+                        <tr>
+                            <th>Tenant ID</th>
+                            <th>Name</th>
+                            <th>Business Type</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tenantTableBody">
+                        <!-- Tenant data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            copyright@sagambalumsgabby
+        </footer>
+    </div>
+    
+    <!-- Tenant Modal -->
+    <div id="tenantModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModalBtn">&times;</span>
+            <h2 id="modalTitle">Add New Tenant</h2>
+            
+            <form id="tenantForm">
+                <div class="form-group">
+                    <label for="tenantId">Tenant ID</label>
+                    <input type="text" id="tenantId" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tenantName">Full Name *</label>
+                    <input type="text" id="tenantName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="businessType">Business Type *</label>
+                    <select id="businessType" required>
+                        <option value="">Select business type</option>
+                        <option value="Office Space">Office Space</option>
+                        <option value="Retail Shop">Retail Shop</option>
+                        <option value="Warehouse">Warehouse</option>
+                        <option value="Restaurant">Restaurant</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number *</label>
+                    <input type="tel" id="phoneNumber" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" required>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Additional Notes</label>
+                    <textarea id="notes" rows="3"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="action-btn delete-btn" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="action-btn edit-btn" id="saveTenantBtn">Save Tenant</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Tenant data storage
+        let tenants = [
+            {
+                id: "TN-001",
+                name: "Gabby Lumumba",
+                businessType: "Office Space",
+                phone: "0788345678",
+                email: "lums@gmail.com",
+                status: "Active",
+                notes: "Long-term tenant"
+            },
+            {
+                id: "TN-002",
+                name: "Sarah Johnson",
+                businessType: "Retail Shop",
+                phone: "0788456789",
+                email: "sarah.j@example.com",
+                status: "Active",
+                notes: "Pays on time"
+            },
+            {
+                id: "TN-003",
+                name: "Robert Smith",
+                businessType: "Warehouse",
+                phone: "0788567890",
+                email: "robert.s@example.com",
+                status: "Inactive",
+                notes: "Lease ended"
+            },
+            {
+                id: "TN-004",
+                name: "Michael Brown",
+                businessType: "Restaurant",
+                phone: "0788678901",
+                email: "michael.b@example.com",
+                status: "Active",
+                notes: "New tenant"
+            },
+            {
+                id: "TN-005",
+                name: "Emily Davis",
+                businessType: "Office Space",
+                phone: "0788789012",
+                email: "emily.d@example.com",
+                status: "Active",
+                notes: "Corporate account"
+            }
+        ];
+        
+        // DOM elements
+        const tenantTableBody = document.getElementById('tenantTableBody');
+        const tenantForm = document.getElementById('tenantForm');
+        const tenantModal = document.getElementById('tenantModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const addTenantBtn = document.getElementById('addTenantBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const generateReportBtn = document.getElementById('generateReportBtn');
+        const backButton = document.getElementById('backButton');
+        const searchResultsInfo = document.getElementById('searchResultsInfo');
+        
+        // Statistics elements
+        const totalTenantsEl = document.getElementById('totalTenants');
+        const activeTenantsEl = document.getElementById('activeTenants');
+        const inactiveTenantsEl = document.getElementById('inactiveTenants');
+        const activePercentageEl = document.getElementById('activePercentage');
+        const inactivePercentageEl = document.getElementById('inactivePercentage');
+        const activeProgressEl = document.getElementById('activeProgress');
+        const inactiveProgressEl = document.getElementById('inactiveProgress');
+        
+        // Current tenant being edited
+        let currentTenantId = null;
+        let currentSearchTerm = '';
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTenantTable(tenants);
+            updateStatistics();
+            
+            // Event listeners
+            addTenantBtn.addEventListener('click', openAddTenantModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            tenantForm.addEventListener('submit', handleFormSubmit);
+            searchButton.addEventListener('click', handleSearch);
+            clearSearchBtn.addEventListener('click', clearSearch);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') handleSearch();
+            });
+            generateReportBtn.addEventListener('click', generateReport);
+            backButton.addEventListener('click', goBack);
+        });
+        
+        // Update statistics
+        function updateStatistics() {
+            const total = tenants.length;
+            const active = tenants.filter(t => t.status === 'Active').length;
+            const inactive = total - active;
+            const activePercent = total > 0 ? Math.round((active / total) * 100) : 0;
+            const inactivePercent = 100 - activePercent;
+            
+            totalTenantsEl.textContent = total;
+            activeTenantsEl.textContent = active;
+            inactiveTenantsEl.textContent = inactive;
+            activePercentageEl.textContent = `${activePercent}%`;
+            inactivePercentageEl.textContent = `${inactivePercent}%`;
+            
+            activeProgressEl.style.width = `${activePercent}%`;
+            inactiveProgressEl.style.width = `${inactivePercent}%`;
+        }
+        
+        // Go back function
+        function goBack() {
+            window.history.back();
+        }
+        
+        // Render tenant table with dropdown actions
+        function renderTenantTable(tenantsToRender) {
+            tenantTableBody.innerHTML = '';
+            
+            if (tenantsToRender.length === 0) {
+                tenantTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center;">No tenants found</td>
+                    </tr>
+                `;
+                updateStatistics();
+                return;
+            }
+            
+            tenantsToRender.forEach(tenant => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${tenant.id}</td>
+                    <td>${tenant.name}</td>
+                    <td>${tenant.businessType}</td>
+                    <td>${tenant.phone}</td>
+                    <td>${tenant.email}</td>
+                    <td><span class="status ${tenant.status === 'Active' ? 'status-active' : 'status-inactive'}">${tenant.status}</span></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropdown-btn">Actions ▼</button>
+                            <div class="dropdown-content">
+                                <a href="#" class="action-link view" onclick="viewTenant('${tenant.id}')">View Details</a>
+                                <a href="#" class="action-link edit" onclick="editTenant('${tenant.id}')">Edit</a>
+                                ${tenant.status === 'Active' ? 
+                                  `<a href="#" class="action-link inactivate" onclick="toggleTenantStatus('${tenant.id}', 'Inactive')">Inactivate</a>` : 
+                                  `<a href="#" class="action-link activate" onclick="toggleTenantStatus('${tenant.id}', 'Active')">Activate</a>`}
+                                <a href="#" class="action-link delete" onclick="deleteTenant('${tenant.id}')">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tenantTableBody.appendChild(row);
+            });
+            
+            updateStatistics();
+        }
+        
+        // Toggle tenant status (activate/inactivate)
+        function toggleTenantStatus(tenantId, newStatus) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (!tenant) return;
+            
+            const action = newStatus === 'Active' ? 'activate' : 'inactivate';
+            
+            if (confirm(`Are you sure you want to ${action} tenant ${tenantId}?`)) {
+                tenant.status = newStatus;
+                
+                // If we're in a search view, we need to reapply the search
+                if (currentSearchTerm) {
+                    handleSearch(currentSearchTerm);
+                } else {
+                    renderTenantTable(tenants);
+                }
+                
+                alert(`Tenant ${tenantId} has been ${action}d successfully!`);
+            }
+        }
+        
+        // Open modal to add new tenant
+        function openAddTenantModal() {
+            currentTenantId = null;
+            modalTitle.textContent = 'Add New Tenant';
+            
+            // Generate a tenant ID
+            const now = new Date();
+            const tenantId = `TN-${now.getFullYear().toString().slice(-2)}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random()*100).toString().padStart(2, '0')}`;
+            document.getElementById('tenantId').value = tenantId;
+            
+            // Reset form
+            tenantForm.reset();
+            document.getElementById('status').value = 'Active';
+            
+            // Enable all fields
+            const inputs = tenantForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Show the modal
+            tenantModal.style.display = 'block';
+        }
+        
+        // View tenant details
+        function viewTenant(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (!tenant) return;
+            
+            modalTitle.textContent = `View Tenant ${tenantId}`;
+            
+            // Populate form
+            document.getElementById('tenantId').value = tenant.id;
+            document.getElementById('tenantName').value = tenant.name;
+            document.getElementById('businessType').value = tenant.businessType;
+            document.getElementById('phoneNumber').value = tenant.phone;
+            document.getElementById('email').value = tenant.email;
+            document.getElementById('status').value = tenant.status;
+            document.getElementById('notes').value = tenant.notes || '';
+            
+            // Disable all fields for view mode
+            const inputs = tenantForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+            
+            // Hide the save button
+            document.getElementById('saveTenantBtn').style.display = 'none';
+            
+            // Show the modal
+            tenantModal.style.display = 'block';
+        }
+        
+        // Edit tenant
+        function editTenant(tenantId) {
+            currentTenantId = tenantId;
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (!tenant) return;
+            
+            modalTitle.textContent = `Edit Tenant ${tenantId}`;
+            
+            // Populate form
+            document.getElementById('tenantId').value = tenant.id;
+            document.getElementById('tenantName').value = tenant.name;
+            document.getElementById('businessType').value = tenant.businessType;
+            document.getElementById('phoneNumber').value = tenant.phone;
+            document.getElementById('email').value = tenant.email;
+            document.getElementById('status').value = tenant.status;
+            document.getElementById('notes').value = tenant.notes || '';
+            
+            // Enable all fields
+            const inputs = tenantForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Show the save button
+            document.getElementById('saveTenantBtn').style.display = 'inline-block';
+            
+            // Show the modal
+            tenantModal.style.display = 'block';
+        }
+        
+        // Delete tenant
+        function deleteTenant(tenantId) {
+            if (confirm(`Are you sure you want to delete tenant ${tenantId}?`)) {
+                tenants = tenants.filter(t => t.id !== tenantId);
+                
+                // If we're in a search view, we need to reapply the search
+                if (currentSearchTerm) {
+                    handleSearch(currentSearchTerm);
+                } else {
+                    renderTenantTable(tenants);
+                }
+                
+                alert(`Tenant ${tenantId} deleted successfully!`);
+            }
+        }
+        
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const tenantData = {
+                id: document.getElementById('tenantId').value,
+                name: document.getElementById('tenantName').value,
+                businessType: document.getElementById('businessType').value,
+                phone: document.getElementById('phoneNumber').value,
+                email: document.getElementById('email').value,
+                status: document.getElementById('status').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            // Validate required fields
+            if (!tenantData.name || !tenantData.businessType || !tenantData.phone || !tenantData.email) {
+                alert('Please fill in all required fields (marked with *)');
+                return;
+            }
+            
+            // Add or update tenant
+            if (currentTenantId) {
+                // Update existing tenant
+                const index = tenants.findIndex(t => t.id === currentTenantId);
+                if (index !== -1) {
+                    tenants[index] = tenantData;
+                }
+            } else {
+                // Add new tenant
+                tenants.push(tenantData);
+            }
+            
+            // Refresh table and close modal
+            if (currentSearchTerm) {
+                handleSearch(currentSearchTerm);
+            } else {
+                renderTenantTable(tenants);
+            }
+            closeModal();
+            alert(`Tenant ${tenantData.id} saved successfully!`);
+        }
+        
+        // Handle search
+        function handleSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            currentSearchTerm = searchTerm;
+            
+            if (!searchTerm) {
+                clearSearch();
+                return;
+            }
+            
+            const filteredTenants = tenants.filter(tenant => 
+                tenant.id.toLowerCase().includes(searchTerm) ||
+                tenant.name.toLowerCase().includes(searchTerm) ||
+                tenant.businessType.toLowerCase().includes(searchTerm) ||
+                tenant.phone.toLowerCase().includes(searchTerm) ||
+                tenant.email.toLowerCase().includes(searchTerm)
+            );
+            
+            renderTenantTable(filteredTenants);
+            
+            // Update search info
+            searchResultsInfo.textContent = `Showing ${filteredTenants.length} results for "${searchTerm}"`;
+            clearSearchBtn.style.display = 'inline-block';
+        }
+        
+        // Clear search
+        function clearSearch() {
+            searchInput.value = '';
+            currentSearchTerm = '';
+            renderTenantTable(tenants);
+            searchResultsInfo.textContent = '';
+            clearSearchBtn.style.display = 'none';
+        }
+        
+        // Generate report
+        function generateReport() {
+            // In a real app, this would generate a PDF or CSV report
+            const active = tenants.filter(t => t.status === 'Active').length;
+            const inactive = tenants.length - active;
+            
+            alert(`Generating tenant report...\n\nTotal Tenants: ${tenants.length}\nActive Tenants: ${active}\nInactive Tenants: ${inactive}`);
+        }
+        
+        // Close modal
+        function closeModal() {
+            tenantModal.style.display = 'none';
+            
+            // Reset form and enable all fields
+            tenantForm.reset();
+            const inputs = tenantForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Make sure save button is visible
+            document.getElementById('saveTenantBtn').style.display = 'inline-block';
+            
+            currentTenantId = null;
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === tenantModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management System - Login</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .login-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .description {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .login-btn {
+            background-color: #3498db;
+            color: white;
+            width: 100%;
+        }
+        
+        .login-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .back-btn {
+            background-color: #95a5a6;
+            color: white;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .back-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        footer {
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="javascript:history.back()" class="btn back-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            Back
+        </a>
+        
+        <h1>Tenant Management System</h1>
+        <p class="description">
+            Please login with your credentials<br>
+            Select your department to access the appropriate dashboard
+        </p>
+        
+        <form class="login-form" id="loginForm" method="post">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="psw">Password:</label>
+                <input type="password" id="psw" name="psw" placeholder="Enter your password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <select id="department" name="department" required>
+                    <option value="">Select your department</option>
+                    <option value="admin">Administrator</option>
+                    <option value="property">Property Manager</option>
+                    <option value="finance">Finance Manager</option>
+                    <option value="staff">Other Staff</option>
+                </select>
+            </div>
+            
+            <div id="errorMessage" class="error-message"></div>
+            
+            <div class="action-buttons">
+                <button type="submit" class="btn login-btn">Login</button>
+            </div>
+        </form>
+        
+        <footer>Copyright © sagambalumsgabby</footer>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('psw').value;
+            const department = document.getElementById('department').value;
+            
+            // Simple validation
+            if (!email || !password || !department) {
+                document.getElementById('errorMessage').textContent = 'Please fill in all fields';
+                return;
+            }
+            
+            // Here you would typically send this data to a server for authentication
+            // For this example, we'll just redirect based on department
+            
+            switch(department) {
+                case 'admin':
+                    window.location.href = 'tenantmanagementsystem.html';
+                    break;
+                case 'property':
+                    window.location.href = 'promanager.html';
+                    break;
+                case 'finance':
+                    window.location.href = 'paymanger2.html';
+                    break;
+                case 'staff':
+                    window.location.href = 'otherstaff.html';
+                    break;
+                default:
+                    document.getElementById('errorMessage').textContent = 'Invalid department selected';
+            }
+        });
+    </script>
+</body>
+</html>

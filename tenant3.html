@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management System</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --medium-bg: #b2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --table-header: #2c7873;
+            --table-row-odd: #f5f5f5;
+            --table-row-even: #e0f2f1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: var(--medium-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--secondary-color);
+            padding: 10px 20px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-menu li {
+            margin: 0 5px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-container input {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            border-right: none;
+            width: 200px;
+            transition: width 0.3s;
+        }
+        
+        .search-container input:focus {
+            outline: none;
+            width: 250px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-container button:hover {
+            background-color: #003d30;
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 200px;
+            background-color: var(--dark-bg);
+            padding: 15px;
+        }
+        
+        .sidebar a {
+            display: block;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--dark-bg);
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        /* Payment Summary Styles */
+        .payment-summary {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .summary-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            width: 30%;
+            min-width: 200px;
+            margin: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .summary-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .tenant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tenant-table th {
+            background-color: var(--table-header);
+            color: var(--light-text);
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .tenant-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        
+        .tenant-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+        
+        .tenant-table tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+        
+        .tenant-table tr:hover {
+            background-color: #d1f0eb;
+        }
+        
+        /* Payment Status */
+        .payment-status {
+            font-weight: bold;
+        }
+        
+        .payment-paid {
+            color: var(--success-color);
+        }
+        
+        .payment-pending {
+            color: var(--warning-color);
+        }
+        
+        .payment-overdue {
+            color: var(--danger-color);
+        }
+        
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: var(--info-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.85em;
+            transition: background-color 0.3s;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: var(--accent-color);
+        }
+
+        /* Style for dropdown items */
+        .view-action {
+            color: var(--info-color);
+        }
+
+        .edit-action {
+            color: var(--success-color);
+        }
+
+        .delete-action {
+            color: var(--danger-color);
+        }
+        
+        .activate-action {
+            color: var(--warning-color);
+        }
+        
+        .btn-back {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 15px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-back:hover {
+            background-color: #003d30;
+        }
+        
+        .footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-menu {
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+            
+            .search-container {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .search-container input {
+                width: 70%;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            
+            .sidebar a {
+                margin: 0 5px;
+                padding: 8px;
+            }
+            
+            .payment-summary {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .summary-card {
+                width: 80%;
+            }
+            
+            .tenant-table {
+                font-size: 0.8rem;
+            }
+            
+            .tenant-table th, 
+            .tenant-table td {
+                padding: 6px;
+            }
+            
+            /* Mobile dropdown styles */
+            .dropdown-content {
+                position: static;
+                width: 100%;
+            }
+        
+            .dropdown:hover .dropdown-content {
+                display: none;
+            }
+        
+            .dropdown-content.show {
+                display: block;
+            }
+        
+            .dropbtn::after {
+                content: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Property Management Header">
+        </header>
+        
+        <div class="nav-container">
+            <ul class="nav-menu">
+                
+                <li><a href="paymanger2.html" class="active">Home</a></li>
+                <li><a href="leaser3.html">Leasers</a></li>
+                <li><a href="tenant3.html">Tenants Portal</a></li>
+                <li><a href="payment2.html">Payment Gateway</a></li>
+            </ul>
+            
+            <div class="search-container">
+                <input type="text" id="tenantSearch" placeholder="Search tenants...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <div class="payment-summary">
+                    <div class="summary-card">
+                        <div class="summary-title">TOTAL TENANTS</div>
+                        <div class="summary-value" id="totalTenants">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-title">ACTIVE TENANTS</div>
+                        <div class="summary-value" id="activeTenants">0</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-title">INACTIVE TENANTS</div>
+                        <div class="summary-value" id="inactiveTenants">0</div>
+                    </div>
+                </div>
+                
+                <a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                    <img src="photo/news.jpeg" alt="News"> News
+                </a>
+                <a href="notification.html" target="_blank">
+                    <img src="photo/icon.gif" alt="Notifications"> Notifications
+                </a>
+                <a href="#" target="_blank">
+                    <img src="photo/help.gif" alt="Help"> Help
+                </a>
+            </aside>
+            
+            <main class="main-content">
+                <h1>TENANT PORTAL</h1>
+                <h2>TENANTS PORTAL</h2>
+                
+                <table class="tenant-table" id="tenantTable">
+                    <thead>
+                        <tr>
+                            <th>Tenant ID</th>
+                            <th>Name</th>
+                            <th>Business Type</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tenantTableBody">
+                        <!-- Tenant data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            copyright@sagambalumsgabby
+        </footer>
+    </div>
+
+    <script>
+        // Sample tenant data
+        const tenants = [
+            {
+                id: "T001",
+                name: "Gabby Sagamba",
+                businessType: "Retail",
+                phone: "+250 788 123 456",
+                email: "gabby@example.com",
+                status: "Active"
+            },
+            {
+                id: "T002",
+                name: "John Doe",
+                businessType: "Office",
+                phone: "+250 788 234 567",
+                email: "john@example.com",
+                status: "Pending"
+            },
+            {
+                id: "T003",
+                name: "Jane Smith",
+                businessType: "Warehouse",
+                phone: "+250 788 345 678",
+                email: "jane@example.com",
+                status: "Inactive"
+            },
+            {
+                id: "T004",
+                name: "Michael Johnson",
+                businessType: "Restaurant",
+                phone: "+250 788 456 789",
+                email: "michael@example.com",
+                status: "Active"
+            },
+            {
+                id: "T005",
+                name: "Sarah Williams",
+                businessType: "Salon",
+                phone: "+250 788 567 890",
+                email: "sarah@example.com",
+                status: "Active"
+            }
+        ];
+
+        // DOM elements
+        const tenantTableBody = document.getElementById('tenantTableBody');
+        const searchBtn = document.getElementById('searchBtn');
+        const tenantSearch = document.getElementById('tenantSearch');
+        const totalTenantsEl = document.getElementById('totalTenants');
+        const activeTenantsEl = document.getElementById('activeTenants');
+        const inactiveTenantsEl = document.getElementById('inactiveTenants');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTenantSummary();
+            renderTenantTable(tenants);
+            
+            // Search functionality
+            searchBtn.addEventListener('click', performSearch);
+            tenantSearch.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+        });
+
+        // Update tenant summary statistics
+        function updateTenantSummary() {
+            const total = tenants.length;
+            const active = tenants.filter(t => t.status === 'Active').length;
+            const inactive = tenants.filter(t => t.status === 'Inactive' || t.status === 'Pending').length;
+            
+            totalTenantsEl.textContent = total;
+            activeTenantsEl.textContent = active;
+            inactiveTenantsEl.textContent = inactive;
+        }
+
+        // View tenant details
+        function viewTenant(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                alert(`Tenant Details:\n\nID: ${tenant.id}\nName: ${tenant.name}\nBusiness: ${tenant.businessType}\nPhone: ${tenant.phone}\nEmail: ${tenant.email}\nStatus: ${tenant.status}`);
+            }
+        }
+
+        // Edit tenant
+        function editTenant(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                alert(`Edit tenant ${tenant.name} (${tenant.id})`);
+                // In a real app, this would open an edit modal/form
+            }
+        }
+
+        // Toggle tenant status
+        function toggleTenantStatus(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                const newStatus = tenant.status === 'Active' ? 'Inactive' : 'Active';
+                if (confirm(`Are you sure you want to set ${tenant.name} to ${newStatus}?`)) {
+                    tenant.status = newStatus;
+                    updateTenantSummary();
+                    renderTenantTable(tenants);
+                    alert(`Tenant ${tenant.name} is now ${newStatus}`);
+                }
+            }
+        }
+
+        // Delete tenant
+        function deleteTenant(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                if (confirm(`Are you sure you want to delete ${tenant.name} (${tenant.id})?`)) {
+                    // In a real app, this would remove from the array and update the table
+                    alert(`Tenant ${tenant.name} deleted successfully!`);
+                }
+            }
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = tenantSearch.value.toLowerCase();
+            
+            if (!searchTerm.trim()) {
+                // If search is empty, show all tenants
+                renderTenantTable(tenants);
+                return;
+            }
+            
+            const filteredTenants = tenants.filter(tenant => {
+                return (
+                    tenant.id.toLowerCase().includes(searchTerm) ||
+                    tenant.name.toLowerCase().includes(searchTerm) ||
+                    tenant.businessType.toLowerCase().includes(searchTerm) ||
+                    tenant.phone.toLowerCase().includes(searchTerm) ||
+                    tenant.email.toLowerCase().includes(searchTerm) ||
+                    tenant.status.toLowerCase().includes(searchTerm)
+                );
+            });
+            
+            renderTenantTable(filteredTenants);
+        }
+
+        // Render tenant table
+        function renderTenantTable(tenantsToRender) {
+            tenantTableBody.innerHTML = '';
+            
+            if (tenantsToRender.length === 0) {
+                tenantTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center;">No tenants found matching your search criteria</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tenantsToRender.forEach(tenant => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'payment-paid';
+                if (tenant.status === 'Pending') statusClass = 'payment-pending';
+                if (tenant.status === 'Inactive') statusClass = 'payment-overdue';
+                
+                row.innerHTML = `
+                    <td>${tenant.id}</td>
+                    <td>${tenant.name}</td>
+                    <td>${tenant.businessType}</td>
+                    <td>${tenant.phone}</td>
+                    <td>${tenant.email}</td>
+                    <td><span class="payment-status ${statusClass}">${tenant.status}</span></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn">Actions ▼</button>
+                            <div class="dropdown-content">
+                                <a href="#" class="view-action" data-id="${tenant.id}">View</a>
+                                <a href="#" class="edit-action" data-id="${tenant.id}">Edit</a>
+                                <a href="#" class="activate-action" data-id="${tenant.id}">${tenant.status === 'Active' ? 'Deactivate' : 'Activate'}</a>
+                                <a href="#" class="delete-action" data-id="${tenant.id}">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tenantTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to dropdown actions
+            document.querySelectorAll('.view-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    viewTenant(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.edit-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    editTenant(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.activate-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleTenantStatus(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.delete-action').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    deleteTenant(this.getAttribute('data-id'));
+                });
+            });
+            
+            // For mobile devices - dropdown toggle
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.dropbtn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const dropdown = this.nextElementSibling;
+                        dropdown.classList.toggle('show');
+                    });
+                });
+                
+                // Close dropdowns when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (!e.target.matches('.dropbtn')) {
+                        const dropdowns = document.querySelectorAll('.dropdown-content');
+                        dropdowns.forEach(dropdown => {
+                            if (dropdown.classList.contains('show')) {
+                                dropdown.classList.remove('show');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

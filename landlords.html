@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management System</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --medium-bg: #b2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --table-header: #2c7873;
+            --table-row-odd: #f5f5f5;
+            --table-row-even: #e0f2f1;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --success-color: #4CAF50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--medium-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        nav {
+            background-color: #a2e5e7;
+            border-bottom: 2px solid #92d5d7;
+            padding: 10px 0;
+            position: relative;
+        }
+        
+        .back-btn {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-menu li {
+            margin: 0 10px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: var(--dark-bg);
+            padding: 15px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .stats-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        .stats-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 10px 0;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--dark-bg);
+            overflow-x: auto;
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .search-container {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-container input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .search-container select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .tenant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tenant-table th {
+            background-color: var(--table-header);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .tenant-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tenant-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+        
+        .tenant-table tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+        
+        .tenant-table tr:hover {
+            background-color: #d1f0eb;
+        }
+        
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 0.8rem;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown:hover .dropdown-btn {
+            background-color: var(--accent-color);
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        .form-actions {
+            text-align: right;
+            margin-top: 20px;
+        }
+        
+        .footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+        }
+        
+        /* Action item colors */
+        .edit-action {
+            color: var(--warning-color);
+        }
+        
+        .activate-action {
+            color: var(--success-color);
+        }
+        
+        .deactivate-action {
+            color: #757575;
+        }
+        
+        .delete-action {
+            color: var(--danger-color);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            
+            .sidebar a {
+                flex-direction: column;
+                align-items: center;
+                padding: 8px;
+                margin: 0 5px;
+            }
+            
+            .sidebar img {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            .tenant-table {
+                font-size: 0.9rem;
+            }
+            
+            .tenant-table th, 
+            .tenant-table td {
+                padding: 8px;
+            }
+            
+            .back-btn {
+                position: static;
+                transform: none;
+                margin: 5px auto;
+                display: block;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .form-group {
+                flex: 100%;
+                margin-right: 0;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            /* Adjust dropdown for mobile */
+            .dropdown-content {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Property Management Header">
+        </header>
+        
+        <nav>
+            
+            <ul class="nav-menu">
+                <li><a href="tenantmanagementsystem.html">Home</a></li>
+                <li><a href="leaser.html">Leasers</a></li>
+                <li><a href="tenants.html">Tenant Portal</a></li>
+                <li><a href="property management.html">Property Management</a></li>
+                <li><a href="payment.html">Payment Gateway</a></li>
+                <li><a href="sigin.html" class="nav-link">Enter employee</a></li>
+                <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="landlords.html" class="nav-link">landlords</a></li>
+            </ul>
+        </nav>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <div class="stats-card">
+                    <h3>Total Landlords</h3>
+                    <div class="stats-value">24</div>
+                    <small>5 new this month</small>
+                </div>
+                
+                <div class="stats-card">
+                    <h3>Active Landlords</h3>
+                    <div class="stats-value">18</div>
+                    <small>75% active rate</small>
+                </div>
+                
+                <div class="stats-card">
+                    <h3>Inactive Landlords</h3>
+                    <div class="stats-value">6</div>
+                    <small>25% inactive</small>
+                </div>
+                
+                <a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                    <img src="photo/news.jpeg" alt="News"> News
+                </a>
+                <a href="notification.html" target="_blank">
+                    <img src="photo/icon.gif" alt="Notifications"> Notifications
+                </a>
+                <a href="#" target="_blank">
+                    <img src="photo/help.gif" alt="Help"> Help
+                </a>
+            </aside>
+            
+            <main class="main-content">
+                <h1>TENANT MANAGEMENT PORTAL</h1>
+                <h2>LANDLORD MANAGEMENT</h2>
+                
+                <button id="toggleFormBtn" class="btn btn-primary" onclick="toggleLandlordForm()">Add New Landlord</button>
+                
+                <div id="landlordForm" class="form-container">
+                    <h3>New Landlord Information</h3>
+                    <form id="addLandlordForm" onsubmit="addLandlord(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="landlordId">Landlord ID</label>
+                                <input type="text" id="landlordId" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="status">Status</label>
+                                <select id="status" required>
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="joinDate">Join Date</label>
+                                <input type="date" id="joinDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn" onclick="toggleLandlordForm()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Landlord</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Search Container -->
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search landlords..." onkeyup="searchLandlords()">
+                    <select id="searchCriteria">
+                        <option value="all">All Fields</option>
+                        <option value="id">Landlord ID</option>
+                        <option value="name">Full Name</option>
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                        <option value="status">Status</option>
+                    </select>
+                </div>
+                
+                <table class="tenant-table">
+                    <thead>
+                        <tr>
+                            <th>Landlord ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="landlordTableBody">
+                        <tr>
+                            <td>LL001</td>
+                            <td>John Smith</td>
+                            <td>john.smith@example.com</td>
+                            <td>0788456723</td>
+                            <td>Active</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropdown-btn">Actions ▼</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" class="edit-action" onclick="editLandlord('LL001')">Edit</a>
+                                        <a href="#" class="deactivate-action" onclick="toggleStatus('LL001', 'Active')">Deactivate</a>
+                                        <a href="#" class="delete-action" onclick="confirmDelete('LL001')">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>LL002</td>
+                            <td>Sarah Johnson</td>
+                            <td>sarah.j@example.com</td>
+                            <td>0791567824</td>
+                            <td>Inactive</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropdown-btn">Actions ▼</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" class="edit-action" onclick="editLandlord('LL002')">Edit</a>
+                                        <a href="#" class="activate-action" onclick="toggleStatus('LL002', 'Inactive')">Activate</a>
+                                        <a href="#" class="delete-action" onclick="confirmDelete('LL002')">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>LL003</td>
+                            <td>Michael Brown</td>
+                            <td>michael.b@example.com</td>
+                            <td>0723456789</td>
+                            <td>Pending</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropdown-btn">Actions ▼</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" class="edit-action" onclick="editLandlord('LL003')">Edit</a>
+                                        <a href="#" class="activate-action" onclick="toggleStatus('LL003', 'Pending')">Activate</a>
+                                        <a href="#" class="delete-action" onclick="confirmDelete('LL003')">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>LL004</td>
+                            <td>Emily Davis</td>
+                            <td>emily.d@example.com</td>
+                            <td>0712345678</td>
+                            <td>Active</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropdown-btn">Actions ▼</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" class="edit-action" onclick="editLandlord('LL004')">Edit</a>
+                                        <a href="#" class="deactivate-action" onclick="toggleStatus('LL004', 'Active')">Deactivate</a>
+                                        <a href="#" class="delete-action" onclick="confirmDelete('LL004')">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>LL005</td>
+                            <td>Robert Wilson</td>
+                            <td>robert.w@example.com</td>
+                            <td>0734567890</td>
+                            <td>Inactive</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropdown-btn">Actions ▼</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" class="edit-action" onclick="editLandlord('LL005')">Edit</a>
+                                        <a href="#" class="activate-action" onclick="toggleStatus('LL005', 'Inactive')">Activate</a>
+                                        <a href="#" class="delete-action" onclick="confirmDelete('LL005')">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            copyright © sagambalumsgabby
+        </footer>
+    </div>
+
+    <script>
+        // Toggle the landlord form visibility
+        function toggleLandlordForm() {
+            const form = document.getElementById('landlordForm');
+            const btn = document.getElementById('toggleFormBtn');
+            
+            if (form.style.display === 'block') {
+                form.style.display = 'none';
+                btn.textContent = 'Add New Landlord';
+                document.getElementById('addLandlordForm').reset();
+            } else {
+                form.style.display = 'block';
+                btn.textContent = 'Cancel';
+                window.scrollTo(0, document.getElementById('landlordForm').offsetTop);
+            }
+        }
+        
+        // Add new landlord to the table
+        function addLandlord(event) {
+            event.preventDefault();
+            
+            const landlordId = document.getElementById('landlordId').value;
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const status = document.getElementById('status').value;
+            const joinDate = document.getElementById('joinDate').value;
+            
+            const tableBody = document.getElementById('landlordTableBody');
+            const newRow = document.createElement('tr');
+            
+            // Determine the appropriate action based on status
+            let actionItem;
+            if (status === 'Active') {
+                actionItem = `<a href="#" class="deactivate-action" onclick="toggleStatus('${landlordId}', 'Active')">Deactivate</a>`;
+            } else {
+                actionItem = `<a href="#" class="activate-action" onclick="toggleStatus('${landlordId}', '${status}')">Activate</a>`;
+            }
+            
+            newRow.innerHTML = `
+                <td>${landlordId}</td>
+                <td>${fullName}</td>
+                <td>${email}</td>
+                <td>${phone}</td>
+                <td>${status}</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="dropdown-btn">Actions ▼</button>
+                        <div class="dropdown-content">
+                            <a href="#" class="edit-action" onclick="editLandlord('${landlordId}')">Edit</a>
+                            ${actionItem}
+                            <a href="#" class="delete-action" onclick="confirmDelete('${landlordId}')">Delete</a>
+                        </div>
+                    </div>
+                </td>
+            `;
+            
+            tableBody.appendChild(newRow);
+            toggleLandlordForm();
+            alert('Landlord added successfully!');
+            updateStats();
+        }
+        
+        // Edit landlord information
+        function editLandlord(landlordId) {
+            const row = Array.from(document.querySelectorAll('#landlordTableBody tr')).find(
+                row => row.cells[0].textContent === landlordId
+            );
+            
+            if (row) {
+                document.getElementById('landlordId').value = row.cells[0].textContent;
+                document.getElementById('fullName').value = row.cells[1].textContent;
+                document.getElementById('email').value = row.cells[2].textContent;
+                document.getElementById('phone').value = row.cells[3].textContent;
+                document.getElementById('status').value = row.cells[4].textContent;
+                
+                toggleLandlordForm();
+                document.getElementById('toggleFormBtn').textContent = 'Update Landlord';
+                
+                // Change form submission to update instead of add
+                const form = document.getElementById('addLandlordForm');
+                form.onsubmit = function(event) {
+                    event.preventDefault();
+                    updateLandlord(landlordId);
+                };
+            }
+        }
+        
+        // Update existing landlord
+        function updateLandlord(oldLandlordId) {
+            const landlordId = document.getElementById('landlordId').value;
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const status = document.getElementById('status').value;
+            
+            const row = Array.from(document.querySelectorAll('#landlordTableBody tr')).find(
+                row => row.cells[0].textContent === oldLandlordId
+            );
+            
+            if (row) {
+                row.cells[0].textContent = landlordId;
+                row.cells[1].textContent = fullName;
+                row.cells[2].textContent = email;
+                row.cells[3].textContent = phone;
+                row.cells[4].textContent = status;
+                
+                // Update action dropdown
+                const actionCell = row.cells[5];
+                let actionItem;
+                if (status === 'Active') {
+                    actionItem = `<a href="#" class="deactivate-action" onclick="toggleStatus('${landlordId}', 'Active')">Deactivate</a>`;
+                } else {
+                    actionItem = `<a href="#" class="activate-action" onclick="toggleStatus('${landlordId}', '${status}')">Activate</a>`;
+                }
+                
+                actionCell.innerHTML = `
+                    <div class="dropdown">
+                        <button class="dropdown-btn">Actions ▼</button>
+                        <div class="dropdown-content">
+                            <a href="#" class="edit-action" onclick="editLandlord('${landlordId}')">Edit</a>
+                            ${actionItem}
+                            <a href="#" class="delete-action" onclick="confirmDelete('${landlordId}')">Delete</a>
+                        </div>
+                    </div>
+                `;
+                
+                toggleLandlordForm();
+                alert('Landlord updated successfully!');
+                updateStats();
+                
+                // Reset form submission to add new landlord
+                const form = document.getElementById('addLandlordForm');
+                form.onsubmit = function(event) {
+                    event.preventDefault();
+                    addLandlord(event);
+                };
+            }
+        }
+        
+        // Toggle landlord status between Active/Inactive
+        function toggleStatus(landlordId, currentStatus) {
+            const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+            if (confirm(`Are you sure you want to set landlord ${landlordId} to ${newStatus}?`)) {
+                const rows = document.querySelectorAll('#landlordTableBody tr');
+                rows.forEach(row => {
+                    if (row.cells[0].textContent === landlordId) {
+                        row.cells[4].textContent = newStatus;
+                        
+                        // Update the dropdown actions
+                        const dropdownContent = row.querySelector('.dropdown-content');
+                        let actionItem;
+                        if (newStatus === 'Active') {
+                            actionItem = `<a href="#" class="deactivate-action" onclick="toggleStatus('${landlordId}', 'Active')">Deactivate</a>`;
+                        } else {
+                            actionItem = `<a href="#" class="activate-action" onclick="toggleStatus('${landlordId}', '${newStatus}')">Activate</a>`;
+                        }
+                        
+                        dropdownContent.innerHTML = `
+                            <a href="#" class="edit-action" onclick="editLandlord('${landlordId}')">Edit</a>
+                            ${actionItem}
+                            <a href="#" class="delete-action" onclick="confirmDelete('${landlordId}')">Delete</a>
+                        `;
+                    }
+                });
+                updateStats();
+            }
+        }
+        
+        // Confirm before deleting a landlord
+        function confirmDelete(landlordId) {
+            if (confirm(`Are you sure you want to delete landlord ${landlordId}? This action cannot be undone.`)) {
+                const rows = document.querySelectorAll('#landlordTableBody tr');
+                rows.forEach(row => {
+                    if (row.cells[0].textContent === landlordId) {
+                        row.remove();
+                    }
+                });
+                updateStats();
+            }
+        }
+        
+        // Search landlords function
+        function searchLandlords() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const criteria = document.getElementById('searchCriteria').value;
+            const table = document.getElementById('landlordTableBody');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let found = false;
+                
+                if (criteria === 'all') {
+                    // Search all columns
+                    for (let j = 0; j < cells.length - 1; j++) { // Skip actions column
+                        if (cells[j]) {
+                            const text = cells[j].textContent.toLowerCase();
+                            if (text.includes(input)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // Search specific column based on criteria
+                    let columnIndex;
+                    switch(criteria) {
+                        case 'id': columnIndex = 0; break;
+                        case 'name': columnIndex = 1; break;
+                        case 'email': columnIndex = 2; break;
+                        case 'phone': columnIndex = 3; break;
+                        case 'status': columnIndex = 4; break;
+                        default: columnIndex = 0;
+                    }
+                    
+                    if (cells[columnIndex]) {
+                        const text = cells[columnIndex].textContent.toLowerCase();
+                        found = text.includes(input);
+                    }
+                }
+
+                if (found) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+            updateStats();
+        }
+        
+        // Update stats cards
+        function updateStats() {
+            const allRows = document.querySelectorAll('#landlordTableBody tr');
+            const visibleRows = Array.from(allRows).filter(row => row.style.display !== 'none');
+            const activeLandlords = Array.from(visibleRows)
+                .filter(row => row.cells[4].textContent === 'Active').length;
+            
+            document.querySelector('.stats-card:nth-child(1) .stats-value').textContent = visibleRows.length;
+            document.querySelector('.stats-card:nth-child(2) .stats-value').textContent = activeLandlords;
+            document.querySelector('.stats-card:nth-child(3) .stats-value').textContent = visibleRows.length - activeLandlords;
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Manager Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --medium-bg: #b2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #2b2b2b;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --warning-color: #ff9800;
+            --success-color: #4caf50;
+            --info-color: #2196f3;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--medium-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            position: relative;
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: var(--light-text);
+            background-color: rgba(0,0,0,0.5);
+            padding: 10px;
+        }
+        
+        .header-overlay h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            padding: 15px 0;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin: 0 10px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box input {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            border-right: none;
+            width: 200px;
+            transition: width 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            width: 250px;
+        }
+        
+        .search-box button {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-box button:hover {
+            background-color: #003d30;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: var(--dark-bg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            color: var(--dark-text);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-item:hover {
+            background-color: var(--secondary-color);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-item img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            background-color: var(--dark-bg);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-title {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 0;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .total-tenants {
+            color: var(--info-color);
+        }
+        
+        .active-tenants {
+            color: var(--success-color);
+        }
+        
+        .vacant-units {
+            color: var(--warning-color);
+        }
+        
+        .total-properties {
+            color: var(--primary-color);
+        }
+        
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .dashboard-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .view-all {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .view-all:hover {
+            text-decoration: underline;
+        }
+        
+        .tenant-list, .property-list {
+            margin-top: 15px;
+        }
+        
+        .tenant-item, .property-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .tenant-item:last-child, .property-item:last-child {
+            border-bottom: none;
+        }
+        
+        .tenant-avatar, .property-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .tenant-info, .property-info {
+            flex: 1;
+        }
+        
+        .tenant-name, .property-name {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .tenant-detail, .property-detail {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .tenant-status {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .status-pending {
+            background-color: #fff8e1;
+            color: var(--warning-color);
+        }
+        
+        .status-inactive {
+            background-color: #ffebee;
+            color: #f44336;
+        }
+        
+        .property-type {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background-color: #e3f2fd;
+            color: var(--info-color);
+        }
+        
+        .recent-activity {
+            margin-top: 30px;
+        }
+        
+        .activity-item {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+        }
+        
+        .payment-icon {
+            background-color: var(--success-color);
+        }
+        
+        .maintenance-icon {
+            background-color: var(--warning-color);
+        }
+        
+        .new-tenant-icon {
+            background-color: var(--info-color);
+        }
+        
+        .activity-info {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .activity-time {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 1024px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .nav-menu {
+                margin-bottom: 15px;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            
+            .sidebar-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 8px;
+                margin: 0 5px;
+            }
+            
+            .sidebar-item img {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+            
+            .search-box input:focus {
+                width: 180px;
+            }
+            
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" alt="Property Management Header" class="header-img">
+            <div class="header-overlay">
+                <h1>Property Manager Dashboard</h1>
+            </div>
+        </header>
+        
+        <nav>
+            <div class="nav-container">
+                <ul class="nav-menu">
+                    <li><a href="promanager.html">home</a></li>
+                    <li><a href="tenant4.html">Tenants</a></li>
+                    <li><a href="propertymange2.html">Properties</a></li>
+                  
+                </ul>
+                
+                <div class="search-box">
+                    <input type="text" placeholder="Search tenants, properties...">
+                    <button type="submit">Search</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <aside class="sidebar">
+                <a href="#" class="sidebar-item">
+                    <img src="photo/news.jpeg" alt="News">
+                    <span>News</span>
+                </a>
+                
+                <a href="notification.html" class="sidebar-item">
+                    <img src="photo/icon.gif" alt="Notifications">
+                    <span>Notifications</span>
+                </a>
+                
+                <a href="#" class="sidebar-item">
+                    <img src="photo/help.gif" alt="Help">
+                    <span>Help Center</span>
+                </a>
+                
+                <a href="logni.html" class="sidebar-item">
+                    <img src="photo/logout.png" alt="Logout">
+                    <span>Logout</span>
+                </a>
+            </aside>
+            
+            <main class="content-area">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Property Manager Overview</h2>
+                    <div class="date-display">Today: <span id="current-date">June 15, 2023</span></div>
+                </div>
+                
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <h3>Total Tenants</h3>
+                        <div class="stat-value total-tenants">42</div>
+                        <p>Across all properties</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Active Tenants</h3>
+                        <div class="stat-value active-tenants">36</div>
+                        <p>With current leases</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Vacant Units</h3>
+                        <div class="stat-value vacant-units">6</div>
+                        <p>Available for rent</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Total Properties</h3>
+                        <div class="stat-value total-properties">8</div>
+                        <p>Under management</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-sections">
+                    <div class="dashboard-section">
+                        <h3 class="section-title">
+                            Recent Tenants
+                            <a href="tenant4.html" class="view-all">View All</a>
+                        </h3>
+                        <div class="tenant-list">
+                            <div class="tenant-item">
+                                <div class="tenant-avatar">JS</div>
+                                <div class="tenant-info">
+                                    <div class="tenant-name">John Smith</div>
+                                    <div class="tenant-detail">Main Street Plaza #101</div>
+                                </div>
+                                <div class="tenant-status status-active">Active</div>
+                            </div>
+                            
+                            <div class="tenant-item">
+                                <div class="tenant-avatar">MJ</div>
+                                <div class="tenant-info">
+                                    <div class="tenant-name">Maria Johnson</div>
+                                    <div class="tenant-detail">Riverside Apartments #305</div>
+                                </div>
+                                <div class="tenant-status status-active">Active</div>
+                            </div>
+                            
+                            <div class="tenant-item">
+                                <div class="tenant-avatar">RB</div>
+                                <div class="tenant-info">
+                                    <div class="tenant-name">Robert Brown</div>
+                                    <div class="tenant-detail">Downtown Tower #412</div>
+                                </div>
+                                <div class="tenant-status status-pending">Pending</div>
+                            </div>
+                            
+                            <div class="tenant-item">
+                                <div class="tenant-avatar">ED</div>
+                                <div class="tenant-info">
+                                    <div class="tenant-name">Emily Davis</div>
+                                    <div class="tenant-detail">Greenfield Complex #18</div>
+                                </div>
+                                <div class="tenant-status status-inactive">Inactive</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section">
+                        <h3 class="section-title">
+                            Property Summary
+                            <a href="propertymange2.html" class="view-all">View All</a>
+                        </h3>
+                        <div class="property-list">
+                            <div class="property-item">
+                                <div class="property-icon">
+                                    <i>🏢</i>
+                                </div>
+                                <div class="property-info">
+                                    <div class="property-name">Main Street Plaza</div>
+                                    <div class="property-detail">12 units | 85% occupied</div>
+                                </div>
+                                <div class="property-type">Commercial</div>
+                            </div>
+                            
+                            <div class="property-item">
+                                <div class="property-icon">
+                                    <i>🏠</i>
+                                </div>
+                                <div class="property-info">
+                                    <div class="property-name">Riverside Apartments</div>
+                                    <div class="property-detail">24 units | 92% occupied</div>
+                                </div>
+                                <div class="property-type">Residential</div>
+                            </div>
+                            
+                            <div class="property-item">
+                                <div class="property-icon">
+                                    <i>🏢</i>
+                                </div>
+                                <div class="property-info">
+                                    <div class="property-name">Downtown Tower</div>
+                                    <div class="property-detail">8 units | 75% occupied</div>
+                                </div>
+                                <div class="property-type">Mixed Use</div>
+                            </div>
+                            
+                            <div class="property-item">
+                                <div class="property-icon">
+                                    <i>🏘️</i>
+                                </div>
+                                <div class="property-info">
+                                    <div class="property-name">Greenfield Complex</div>
+                                    <div class="property-detail">16 units | 81% occupied</div>
+                                </div>
+                                <div class="property-type">Residential</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-section recent-activity">
+                    <h3 class="section-title">Recent Activity</h3>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon payment-icon">
+                                <i>$</i>
+                            </div>
+                            <div class="activity-info">
+                                <div class="activity-title">Rent payment received from John Smith</div>
+                                <div class="activity-time">Today, 10:45 AM | $1,250.00</div>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon maintenance-icon">
+                                <i>🔧</i>
+                            </div>
+                            <div class="activity-info">
+                                <div class="activity-title">Maintenance request for Apartment 305</div>
+                                <div class="activity-time">Yesterday, 3:22 PM | Plumbing issue</div>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon new-tenant-icon">
+                                <i>👤</i>
+                            </div>
+                            <div class="activity-info">
+                                <div class="activity-title">New tenant application received</div>
+                                <div class="activity-time">Yesterday, 11:15 AM | Robert Brown</div>
+                            </div>
+                        </div>
+                        
+                        <div class="activity-item">
+                            <div class="activity-icon payment-icon">
+                                <i>$</i>
+                            </div>
+                            <div class="activity-info">
+                                <div class="activity-title">Rent payment received from Maria Johnson</div>
+                                <div class="activity-time">June 14, 2023, 9:30 AM | $950.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <footer>
+            &copy; 2023 Property Management System | @sagambalumsgabby
+        </footer>
+    </div>
+    
+    <script>
+        // Display current date
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const currentDate = new Date().toLocaleDateString('en-US', options);
+        document.getElementById('current-date').textContent = currentDate;
+        
+        // Sample data for the dashboard (could be replaced with real data from an API)
+        const dashboardData = {
+            totalTenants: 42,
+            activeTenants: 36,
+            vacantUnits: 6,
+            totalProperties: 8,
+            recentTenants: [
+                { id: 1, name: "John Smith", property: "Main Street Plaza #101", status: "active" },
+                { id: 2, name: "Maria Johnson", property: "Riverside Apartments #305", status: "active" },
+                { id: 3, name: "Robert Brown", property: "Downtown Tower #412", status: "pending" },
+                { id: 4, name: "Emily Davis", property: "Greenfield Complex #18", status: "inactive" }
+            ],
+            properties: [
+                { name: "Main Street Plaza", units: 12, occupied: 85, type: "Commercial" },
+                { name: "Riverside Apartments", units: 24, occupied: 92, type: "Residential" },
+                { name: "Downtown Tower", units: 8, occupied: 75, type: "Mixed Use" },
+                { name: "Greenfield Complex", units: 16, occupied: 81, type: "Residential" }
+            ],
+            activities: [
+                { type: "payment", title: "Rent payment received from John Smith", time: "Today, 10:45 AM", detail: "$1,250.00" },
+                { type: "maintenance", title: "Maintenance request for Apartment 305", time: "Yesterday, 3:22 PM", detail: "Plumbing issue" },
+                { type: "new-tenant", title: "New tenant application received", time: "Yesterday, 11:15 AM", detail: "Robert Brown" },
+                { type: "payment", title: "Rent payment received from Maria Johnson", time: "June 14, 2023, 9:30 AM", detail: "$950.00" }
+            ]
+        };
+        
+        // You could use this data to dynamically populate the dashboard
+        // For example:
+        // document.querySelector('.total-tenants').textContent = dashboardData.totalTenants;
+        // document.querySelector('.active-tenants').textContent = dashboardData.activeTenants;
+        // etc.
+    </script>
+</body>
+</html>

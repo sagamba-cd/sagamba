@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Commercial Tenant Management</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #F44336;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--secondary-color);
+            padding: 10px 20px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-menu li {
+            margin: 0 5px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-container input {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            border-right: none;
+            width: 200px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background-color: var(--dark-bg);
+            padding: 15px;
+        }
+        
+        .admin-profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .admin-profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar-menu img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 22%;
+            min-width: 200px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #666;
+        }
+        
+        .dashboard-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .section-title {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .view-all {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-paid {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .status-pending {
+            background-color: #fff8e1;
+            color: var(--warning-color);
+        }
+        
+        .status-overdue {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .status-active {
+            background-color: #e8f5e9;
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .quick-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        
+        .action-btn:hover {
+            background-color: #003d30;
+        }
+        
+        .footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .nav-menu {
+                margin-bottom: 15px;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .stat-card {
+                width: 45%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Commercial Property Management">
+        </header>
+        
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="paymanger2.html" class="active">Dashboard</a></li>
+                <li><a href="leaser3.html">Leasers</a></li>
+                <li><a href="tenant3.html">Tenants</a></li>
+                <li><a href="payment2.html">Payments</a></li>
+            </ul>
+            
+            <div class="search-container">
+                <input type="text" placeholder="Search...">
+                <button type="submit">Search</button>
+            </div>
+        </div>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <div class="admin-profile">
+                    <h3>Property Manager</h3>
+                    <p>Last login: Today</p>
+                </div>
+                
+                <ul class="sidebar-menu">
+                    <li><a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                        <img src="photo/news.jpeg" alt="News"> News
+                    </a></li>
+                    <li><a href="notification.html">
+                        <img src="photo/icon.gif" alt="Notifications"> Notifications
+                    </a></li>
+                    <li><a href="#">
+                        <img src="photo/help.gif" alt="Help"> Help Center
+                    </a></li>
+                    <li><a href="logni.html">
+                         Logout
+                    </a></li>
+                </ul>
+            </aside>
+            
+            <main class="main-content">
+                <div class="dashboard-header">
+                    <h1>Commercial Property Dashboard</h1>
+                    <p>Manage your commercial tenants and properties efficiently</p>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-label">Active Tenants</div>
+                        <div class="stat-value">42</div>
+                        <a href="tenant3.html">View All</a>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Occupied Units</div>
+                        <div class="stat-value">38</div>
+                        <a href="leaser3.html">View Leases</a>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Pending Payments</div>
+                        <div class="stat-value">5</div>
+                        <a href="payment2.html">View Details</a>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-label">Monthly Revenue</div>
+                        <div class="stat-value">RWF 12.8M</div>
+                        <a href="payment2.html">Financial Report</a>
+                    </div>
+                </div>
+                
+                <!-- Payments Dashboard Section -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Recent Payments</h2>
+                        <a href="payment2.html" class="view-all">View All Payments</a>
+                    </div>
+                    <div class="table-container">
+                        
+                    
+                </div>
+                
+                <div class="quick-actions">
+                    <a href="tenant3.html" class="action-btn">Add New Tenant</a>
+                    <a href="leaser3.html" class="action-btn">Create Lease</a>
+                    <a href="payment2.html" class="action-btn">Record Payment</a>
+                    <a href="#" class="action-btn">Generate Reports</a>
+                </div>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            &copy; 2023 Commercial Property Management System | sagambalumsgabby
+        </footer>
+    </div>
+</body>
+</html>

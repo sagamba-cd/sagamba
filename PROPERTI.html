@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Management | Tenant System</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --medium-bg: #b2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --table-header: #2c7873;
+            --table-row-odd: #f5f5f5;
+            --table-row-even: #e0f2f1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--medium-bg);
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            object-position: center;
+        }
+        
+        .back-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            margin-right: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--secondary-color);
+            padding: 10px 20px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-menu li {
+            margin: 0 10px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .search-container {
+            display: flex;
+            margin-right: 20px;
+        }
+        
+        .search-container input {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            border-right: none;
+            width: 200px;
+            transition: width 0.3s;
+        }
+        
+        .search-container input:focus {
+            outline: none;
+            width: 250px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-container button:hover {
+            background-color: #003d30;
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-bg);
+            padding: 15px;
+        }
+        
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        
+        /* Stats Box Styles */
+        .stats-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .stats-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .stats-subvalue {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 3px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: var(--dark-bg);
+            overflow-x: auto;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* Table Styles */
+        .property-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .property-table th {
+            background-color: var(--table-header);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .property-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .property-table tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+        
+        .property-table tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+        
+        .property-table tr:hover {
+            background-color: #d1f0eb;
+        }
+        
+        /* Status Badges */
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-available {
+            background-color: #e6f7ee;
+            color: var(--success-color);
+        }
+        
+        .status-taken {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .status-maintenance {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: var(--info-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.85em;
+            transition: background-color 0.3s;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: var(--accent-color);
+        }
+
+        /* Style for dropdown items */
+        .dropdown-view {
+            color: var(--info-color);
+        }
+
+        .dropdown-edit {
+            color: var(--warning-color);
+        }
+
+        .dropdown-delete {
+            color: var(--danger-color);
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 25px;
+            border: 1px solid #ddd;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: black;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-save {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-clear {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-cancel {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-menu {
+                margin-bottom: 15px;
+                justify-content: center;
+            }
+            
+            .search-container {
+                width: 100%;
+                margin: 10px 0;
+                justify-content: center;
+            }
+            
+            .search-container input {
+                width: 70%;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+                padding: 10px;
+            }
+            
+            .stats-box {
+                width: 45%;
+                margin: 5px;
+            }
+            
+            .sidebar a {
+                flex-direction: column;
+                align-items: center;
+                padding: 8px;
+                margin: 0 5px;
+            }
+            
+            .sidebar img {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            .property-table {
+                font-size: 0.9rem;
+            }
+            
+            .property-table th, 
+            .property-table td {
+                padding: 8px;
+            }
+            
+            /* Mobile dropdown styles */
+            .dropdown-content {
+                position: static;
+                width: 100%;
+            }
+            
+            .dropdown:hover .dropdown-content {
+                display: none;
+            }
+            
+            .dropdown-content.show {
+                display: block;
+            }
+            
+            .dropbtn::after {
+                content: none;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .modal-btn {
+                width: 100%;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Property Management Header">
+        </header>
+        
+        <nav>
+            
+            <ul class="nav-menu">
+                <li><a href="otherstaff.html">Home</a></li>
+                <li><a href="leaser2.html">Leasers</a></li>
+                <li><a href="tenant2.html">Tenants Portal</a></li>
+                <li><a href="PROPERTI.html">Property</a></li>
+                <li><a href="paymento.html">payments</a></li>
+            </ul>
+            
+            <div class="search-container">
+                <input type="text" id="propertySearch" placeholder="Search properties...">
+                <button id="searchBtn">Search</button>
+            </div>
+        </nav>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <!-- Property Statistics Section -->
+                <div class="stats-box">
+                    <div class="stats-title">TOTAL PROPERTIES</div>
+                    <div class="stats-value" id="totalProperties">0</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">AVAILABLE PROPERTIES</div>
+                    <div class="stats-value" id="availableProperties">0</div>
+                    <div class="stats-subvalue" id="availablePercentage">0% of total</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">OCCUPIED PROPERTIES</div>
+                    <div class="stats-value" id="occupiedProperties">0</div>
+                    <div class="stats-subvalue" id="occupiedPercentage">0% of total</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">TOTAL MONTHLY RENT</div>
+                    <div class="stats-value" id="totalRent">0 RWF</div>
+                </div>
+                
+                <a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                    <img src="photo/news.jpeg" alt="News"> News
+                </a>
+                <a href="notification.html" target="_blank">
+                    <img src="photo/icon.gif" alt="Notifications"> Notifications
+                </a>
+                <a href="#" target="_blank">
+                    <img src="photo/help.gif" alt="Help"> Help
+                </a>
+                <a href="logni.html">Logout</a>
+            </aside>
+            
+            <main class="main-content">
+                <h1>PROPERTY MANAGEMENT</h1>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="addPropertyBtn">Add New Property</button>
+                    <button class="btn btn-primary" id="generateReportBtn">Generate Report</button>
+                </div>
+                
+                <table class="property-table" id="propertyTable">
+                    <thead>
+                        <tr>
+                            <th>Property ID</th>
+                            <th>Landlord ID</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Rent Amount</th>
+                            <th>Address</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertyTableBody">
+                        <!-- Property data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        
+        <!-- Property Modal -->
+        <div id="propertyModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeModalBtn">&times;</span>
+                <h2 id="modalTitle">Add New Property</h2>
+                
+                <form id="propertyForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="propertyId" class="required-field">Property ID</label>
+                            <input type="text" id="propertyId" readonly>
+                            <div class="error-message" id="propertyIdError">Property ID is required</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="landlordId" class="required-field">Landlord ID</label>
+                            <input type="text" id="landlordId" required>
+                            <div class="error-message" id="landlordIdError">Landlord ID is required</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="propertyType" class="required-field">Property Type</label>
+                            <select id="propertyType" required>
+                                <option value="">Select Property Type</option>
+                                <option value="Office">Office</option>
+                                <option value="Apartment">Apartment</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Warehouse">Warehouse</option>
+                                <option value="Mixed-Use">Mixed-Use</option>
+                            </select>
+                            <div class="error-message" id="propertyTypeError">Please select a property type</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="propertyStatus" class="required-field">Status</label>
+                            <select id="propertyStatus" required>
+                                <option value="Available">Available</option>
+                                <option value="Taken">Taken</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                            <div class="error-message" id="propertyStatusError">Please select a status</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="propertySize" class="required-field">Size (m²)</label>
+                            <input type="number" id="propertySize" min="1" required>
+                            <div class="error-message" id="propertySizeError">Please enter a valid size</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="rentAmount" class="required-field">Rent Amount (RWF)</label>
+                            <input type="number" id="rentAmount" min="1" required>
+                            <div class="error-message" id="rentAmountError">Please enter a valid amount</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="propertyAddress" class="required-field">Address</label>
+                        <input type="text" id="propertyAddress" required>
+                        <div class="error-message" id="propertyAddressError">Address is required</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="propertyDescription">Description</label>
+                        <textarea id="propertyDescription" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="modal-btn btn-clear" id="clearBtn">Clear Form</button>
+                        <button type="button" class="modal-btn btn-cancel" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="modal-btn btn-save" id="saveBtn">Save Property</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            copyright@sagambalumsgabby
+        </footer>
+    </div>
+
+    <script>
+        // Property data storage
+        let properties = [
+            {
+                id: "PR-0001",
+                landlordId: "LD-01",
+                type: "Office",
+                size: 8,
+                rentAmount: 1000000,
+                address: "Kigali Downtown",
+                status: "Taken",
+                description: "Commercial office space in prime location"
+            },
+            {
+                id: "PR-0002",
+                landlordId: "LD-02",
+                type: "Apartment",
+                size: 75,
+                rentAmount: 750000,
+                address: "Kigali Heights",
+                status: "Available",
+                description: "Modern apartment with great views"
+            },
+            {
+                id: "PR-0003",
+                landlordId: "LD-03",
+                type: "Retail",
+                size: 25,
+                rentAmount: 500000,
+                address: "Kigali City Mall",
+                status: "Taken",
+                description: "Retail space in popular shopping mall"
+            }
+        ];
+        
+        // DOM elements
+        const propertyTableBody = document.getElementById('propertyTableBody');
+        const propertyForm = document.getElementById('propertyForm');
+        const propertyModal = document.getElementById('propertyModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const addPropertyBtn = document.getElementById('addPropertyBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const generateReportBtn = document.getElementById('generateReportBtn');
+        const searchBtn = document.getElementById('searchBtn');
+        const propertySearch = document.getElementById('propertySearch');
+        
+        // Statistics elements
+        const totalPropertiesEl = document.getElementById('totalProperties');
+        const availablePropertiesEl = document.getElementById('availableProperties');
+        const availablePercentageEl = document.getElementById('availablePercentage');
+        const occupiedPropertiesEl = document.getElementById('occupiedProperties');
+        const occupiedPercentageEl = document.getElementById('occupiedPercentage');
+        const totalRentEl = document.getElementById('totalRent');
+        
+        // Current property being edited
+        let currentPropertyId = null;
+        let isEditMode = false;
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderPropertyTable(properties);
+            updateStatistics();
+            
+            // Event listeners
+            addPropertyBtn.addEventListener('click', openAddPropertyModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            clearBtn.addEventListener('click', clearForm);
+            propertyForm.addEventListener('submit', handleFormSubmit);
+            generateReportBtn.addEventListener('click', generateReport);
+            searchBtn.addEventListener('click', performSearch);
+            propertySearch.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Real-time validation
+            setupFormValidation();
+            
+            // For mobile devices - dropdown toggle
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.dropbtn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const dropdown = this.nextElementSibling;
+                        dropdown.classList.toggle('show');
+                    });
+                });
+                
+                // Close dropdowns when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (!e.target.matches('.dropbtn')) {
+                        const dropdowns = document.querySelectorAll('.dropdown-content');
+                        dropdowns.forEach(dropdown => {
+                            if (dropdown.classList.contains('show')) {
+                                dropdown.classList.remove('show');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        
+        // Format currency for display
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-RW', { style: 'decimal' }).format(amount) + ' RWF';
+        }
+        
+        // Update statistics
+        function updateStatistics() {
+            const total = properties.length;
+            const available = properties.filter(p => p.status === 'Available').length;
+            const taken = properties.filter(p => p.status === 'Taken').length;
+            const rent = properties.reduce((sum, property) => sum + property.rentAmount, 0);
+            
+            const availablePercent = total > 0 ? Math.round((available / total) * 100) : 0;
+            const takenPercent = total > 0 ? Math.round((taken / total) * 100) : 0;
+            
+            totalPropertiesEl.textContent = total;
+            availablePropertiesEl.textContent = available;
+            availablePercentageEl.textContent = `${availablePercent}% of total`;
+            occupiedPropertiesEl.textContent = taken;
+            occupiedPercentageEl.textContent = `${takenPercent}% of total`;
+            totalRentEl.textContent = formatCurrency(rent);
+        }
+        
+        // Render property table
+        function renderPropertyTable(propertiesToRender = properties) {
+            propertyTableBody.innerHTML = '';
+            
+            if (propertiesToRender.length === 0) {
+                propertyTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center;">No properties found matching your search criteria</td>
+                    </tr>
+                `;
+                updateStatistics();
+                return;
+            }
+            
+            propertiesToRender.forEach(property => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'status-available';
+                if (property.status === 'Taken') statusClass = 'status-taken';
+                if (property.status === 'Maintenance') statusClass = 'status-maintenance';
+                
+                row.innerHTML = `
+                    <td>${property.id}</td>
+                    <td>${property.landlordId}</td>
+                    <td>${property.type}</td>
+                    <td>${property.size} m²</td>
+                    <td>${formatCurrency(property.rentAmount)}</td>
+                    <td>${property.address}</td>
+                    <td><span class="status ${statusClass}">${property.status}</span></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn">Actions ▼</button>
+                            <div class="dropdown-content">
+                                <a href="#" class="dropdown-view" data-id="${property.id}">View</a>
+                                <a href="#" class="dropdown-edit" data-id="${property.id}">Edit</a>
+                                <a href="#" class="dropdown-delete" data-id="${property.id}">Delete</a>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                propertyTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to dropdown actions
+            document.querySelectorAll('.dropdown-view').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    viewProperty(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.dropdown-edit').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    editProperty(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.dropdown-delete').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    deleteProperty(this.getAttribute('data-id'));
+                });
+            });
+            
+            updateStatistics();
+        }
+        
+        // Open modal to add new property
+        function openAddPropertyModal() {
+            isEditMode = false;
+            currentPropertyId = null;
+            modalTitle.textContent = 'Add New Property';
+            clearForm();
+            
+            // Generate a property ID
+            const now = new Date();
+            const propertyId = `PR-${now.getFullYear().toString().slice(-2)}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random()*100).toString().padStart(2, '0')}`;
+            document.getElementById('propertyId').value = propertyId;
+            
+            // Show the modal
+            propertyModal.style.display = 'block';
+        }
+        
+        // View property
+        function viewProperty(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property) return;
+            
+            isEditMode = false;
+            currentPropertyId = propertyId;
+            modalTitle.textContent = `View Property ${propertyId}`;
+            
+            // Populate form
+            populateForm(property);
+            
+            // Disable all fields
+            const inputs = propertyForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+            
+            // Hide the save button
+            saveBtn.style.display = 'none';
+            
+            // Show the modal
+            propertyModal.style.display = 'block';
+        }
+        
+        // Edit property
+        function editProperty(propertyId) {
+            const property = properties.find(p => p.id === propertyId);
+            if (!property) return;
+            
+            isEditMode = true;
+            currentPropertyId = propertyId;
+            modalTitle.textContent = `Edit Property ${propertyId}`;
+            
+            // Populate form
+            populateForm(property);
+            
+            // Enable all fields
+            const inputs = propertyForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Show the save button
+            saveBtn.style.display = 'inline-block';
+            
+            // Show the modal
+            propertyModal.style.display = 'block';
+        }
+        
+        // Populate form with property data
+        function populateForm(property) {
+            document.getElementById('propertyId').value = property.id;
+            document.getElementById('landlordId').value = property.landlordId;
+            document.getElementById('propertyType').value = property.type;
+            document.getElementById('propertySize').value = property.size;
+            document.getElementById('rentAmount').value = property.rentAmount;
+            document.getElementById('propertyAddress').value = property.address;
+            document.getElementById('propertyStatus').value = property.status;
+            document.getElementById('propertyDescription').value = property.description || '';
+        }
+        
+        // Clear form
+        function clearForm() {
+            if (!isEditMode && confirm('Are you sure you want to clear all fields?')) {
+                propertyForm.reset();
+                hideAllErrorMessages();
+                
+                // Generate new ID if in add mode
+                if (!isEditMode) {
+                    const now = new Date();
+                    const propertyId = `PR-${now.getFullYear().toString().slice(-2)}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}-${Math.floor(Math.random()*100).toString().padStart(2, '0')}`;
+                    document.getElementById('propertyId').value = propertyId;
+                }
+            }
+        }
+        
+        // Delete property
+        function deleteProperty(propertyId) {
+            if (confirm(`Are you sure you want to delete property ${propertyId}?`)) {
+                properties = properties.filter(p => p.id !== propertyId);
+                renderPropertyTable();
+                alert(`Property ${propertyId} deleted successfully!`);
+            }
+        }
+        
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                const propertyData = {
+                    id: document.getElementById('propertyId').value,
+                    landlordId: document.getElementById('landlordId').value.trim(),
+                    type: document.getElementById('propertyType').value,
+                    size: parseInt(document.getElementById('propertySize').value),
+                    rentAmount: parseInt(document.getElementById('rentAmount').value),
+                    address: document.getElementById('propertyAddress').value.trim(),
+                    status: document.getElementById('propertyStatus').value,
+                    description: document.getElementById('propertyDescription').value.trim()
+                };
+                
+                if (isEditMode) {
+                    // Update existing property
+                    const index = properties.findIndex(p => p.id === currentPropertyId);
+                    if (index !== -1) {
+                        properties[index] = propertyData;
+                    }
+                } else {
+                    // Add new property
+                    properties.push(propertyData);
+                }
+                
+                // Refresh table and close modal
+                renderPropertyTable();
+                closeModal();
+                alert(`Property ${propertyData.id} ${isEditMode ? 'updated' : 'added'} successfully!`);
+            }
+        }
+        
+        // Validate form
+        function validateForm() {
+            let isValid = true;
+            hideAllErrorMessages();
+            
+            // Validate Landlord ID
+            const landlordId = document.getElementById('landlordId').value.trim();
+            if (!landlordId) {
+                showError('landlordIdError', 'Landlord ID is required');
+                isValid = false;
+            }
+            
+            // Validate Property Type
+            const propertyType = document.getElementById('propertyType').value;
+            if (!propertyType) {
+                showError('propertyTypeError', 'Please select a property type');
+                isValid = false;
+            }
+            
+            // Validate Size
+            const size = document.getElementById('propertySize').value;
+            if (!size || isNaN(size) || size <= 0) {
+                showError('propertySizeError', 'Please enter a valid size');
+                isValid = false;
+            }
+            
+            // Validate Rent Amount
+            const rentAmount = document.getElementById('rentAmount').value;
+            if (!rentAmount || isNaN(rentAmount) || rentAmount <= 0) {
+                showError('rentAmountError', 'Please enter a valid amount');
+                isValid = false;
+            }
+            
+            // Validate Address
+            const address = document.getElementById('propertyAddress').value.trim();
+            if (!address) {
+                showError('propertyAddressError', 'Address is required');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Show error message
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Hide all error messages
+        function hideAllErrorMessages() {
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }
+        
+        // Setup real-time form validation
+        function setupFormValidation() {
+            document.getElementById('landlordId').addEventListener('input', function() {
+                if (this.value.trim()) {
+                    document.getElementById('landlordIdError').style.display = 'none';
+                }
+            });
+            
+            document.getElementById('propertyAddress').addEventListener('input', function() {
+                if (this.value.trim()) {
+                    document.getElementById('propertyAddressError').style.display = 'none';
+                }
+            });
+            
+            document.getElementById('propertySize').addEventListener('input', function() {
+                if (this.value && !isNaN(this.value) && this.value > 0) {
+                    document.getElementById('propertySizeError').style.display = 'none';
+                }
+            });
+            
+            document.getElementById('rentAmount').addEventListener('input', function() {
+                if (this.value && !isNaN(this.value) && this.value > 0) {
+                    document.getElementById('rentAmountError').style.display = 'none';
+                }
+            });
+            
+            document.getElementById('propertyType').addEventListener('change', function() {
+                if (this.value) {
+                    document.getElementById('propertyTypeError').style.display = 'none';
+                }
+            });
+        }
+        
+        // Close modal
+        function closeModal() {
+            propertyModal.style.display = 'none';
+            
+            // Reset form and enable all fields
+            propertyForm.reset();
+            const inputs = propertyForm.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            
+            // Make sure save button is visible
+            saveBtn.style.display = 'inline-block';
+            
+            currentPropertyId = null;
+            isEditMode = false;
+        }
+        
+        // Generate report
+        function generateReport() {
+            const available = properties.filter(p => p.status === 'Available').length;
+            const taken = properties.filter(p => p.status === 'Taken').length;
+            alert(`Generating property report...\n\nTotal Properties: ${properties.length}\nAvailable Properties: ${available}\nOccupied Properties: ${taken}`);
+        }
+        
+        // Search functionality
+        function performSearch() {
+            const searchTerm = propertySearch.value.toLowerCase();
+            
+            if (!searchTerm.trim()) {
+                renderPropertyTable(properties);
+                return;
+            }
+            
+            const filteredProperties = properties.filter(property => {
+                return (
+                    property.id.toLowerCase().includes(searchTerm) ||
+                    property.landlordId.toLowerCase().includes(searchTerm) ||
+                    property.type.toLowerCase().includes(searchTerm) ||
+                    property.status.toLowerCase().includes(searchTerm) ||
+                    property.address.toLowerCase().includes(searchTerm) ||
+                    property.rentAmount.toString().includes(searchTerm) ||
+                    property.size.toString().includes(searchTerm)
+                );
+            });
+            
+            renderPropertyTable(filteredProperties);
+        }
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === propertyModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

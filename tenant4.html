@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management System - Tenant Portal</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #e8f4f3;
+            --dark-text: #2b2b2b;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --table-header: #2c7873;
+            --table-row-odd: #f5f5f5;
+            --table-row-even: #e0f2f1;
+            --warning-color: #ff9800;
+            --success-color: #4caf50;
+            --info-color: #2196F3;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 1rem 0;
+            text-align: center;
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            padding: 0.8rem 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .main-content {
+            display: flex;
+            margin-top: 20px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 5px 0 0 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar a {
+            display: block;
+            color: var(--light-text);
+            text-decoration: none;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .sidebar a:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .sidebar img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        
+        /* Tenant Summary Section */
+        .tenant-summary {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: var(--light-text);
+        }
+        
+        .tenant-summary h3 {
+            margin-top: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 8px;
+            text-align: center;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .summary-value {
+            font-weight: bold;
+        }
+        
+        .total-tenants {
+            color: var(--info-color);
+        }
+        
+        .active-tenants {
+            color: var(--success-color);
+        }
+        
+        .inactive-tenants {
+            color: var(--warning-color);
+        }
+        
+        .content {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 5px 5px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th {
+            background-color: var(--table-header);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--table-row-even);
+        }
+        
+        tr:nth-child(odd) {
+            background-color: var(--table-row-odd);
+        }
+        
+        tr:hover {
+            background-color: #d1f0eb;
+        }
+        
+        .status-active {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .search-box {
+            padding: 8px 15px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .back-btn {
+            padding: 8px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* Dropdown Button */
+        .dropbtn {
+            padding: 6px 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .dropbtn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* Dropdown Content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            right: 0;
+        }
+        
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+        
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+            color: var(--primary-color);
+        }
+        
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: var(--accent-color);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
+        
+        .tenant-details {
+            margin-top: 20px;
+        }
+        
+        .detail-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-label {
+            font-weight: bold;
+            width: 150px;
+        }
+        
+        .detail-value {
+            flex: 1;
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                border-radius: 5px 5px 0 0;
+                margin-bottom: 10px;
+            }
+            
+            .content {
+                border-radius: 0 0 5px 5px;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 5px 0;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-box {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .modal-content {
+                width: 90%;
+                margin: 20% auto;
+            }
+            
+            .dropdown-content {
+                right: auto;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="photo/desert.jpeg" class="header-img" alt="Property Management Header">
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="promanager.html">Home</a></li>
+            <li><a href="tenant4.html">Tenants Portal</a></li>
+            <li><a href="propertymange2.html">Property Management</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <div class="main-content">
+            <aside class="sidebar">
+                <!-- Tenant Summary Section -->
+                <div class="tenant-summary">
+                    <h3>Tenant Summary</h3>
+                    <div class="summary-item">
+                        <span>Total Tenants:</span>
+                        <span class="summary-value total-tenants" id="totalTenants">5</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Active Tenants:</span>
+                        <span class="summary-value active-tenants" id="activeTenants">3</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Inactive Tenants:</span>
+                        <span class="summary-value inactive-tenants" id="inactiveTenants">2</span>
+                    </div>
+                  
+                </div>
+                
+                <a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                    <img src="photo/news.jpeg" alt="News"> News
+                </a>
+                <a href="notification.html" target="_blank">
+                    <img src="photo/icon.gif" alt="Notifications"> Notifications
+                </a>
+                <a href="#" target="_blank">
+                    <img src="photo/help.gif" alt="Help"> Help
+                </a>
+            </aside>
+            
+            <main class="content">
+                <h2>TENANTS PORTAL</h2>
+                
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-box" placeholder="Search tenants..." onkeyup="searchTenants()">
+                    <button class="back-btn" onclick="window.location.href='promanager.html'">Back to Dashboard</button>
+                </div>
+                
+                <table id="tenantsTable">
+                    <thead>
+                        <tr>
+                            <th>Tenant ID</th>
+                            <th>Name</th>
+                            <th>Business Type</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T1001</td>
+                            <td>John Smith</td>
+                            <td>Retail</td>
+                            <td>555-123-4567</td>
+                            <td>john.smith@example.com</td>
+                            <td class="status-active">Active</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn">Actions</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" onclick="viewTenantDetails('T1001')">View Details</a>
+                                        <a href="#">Edit Tenant</a>
+                                        <a href="#">Send Message</a>
+                                        <a href="#">Payment History</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T1002</td>
+                            <td>Sarah Johnson</td>
+                            <td>Restaurant</td>
+                            <td>555-234-5678</td>
+                            <td>sarah.j@example.com</td>
+                            <td class="status-active">Active</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn">Actions</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" onclick="viewTenantDetails('T1002')">View Details</a>
+                                        <a href="#">Edit Tenant</a>
+                                        <a href="#">Send Message</a>
+                                        <a href="#">Payment History</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T1003</td>
+                            <td>Michael Brown</td>
+                            <td>Office</td>
+                            <td>555-345-6789</td>
+                            <td>michael.b@example.com</td>
+                            <td class="status-inactive">Inactive</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn">Actions</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" onclick="viewTenantDetails('T1003')">View Details</a>
+                                        <a href="#">Edit Tenant</a>
+                                        <a href="#">Send Message</a>
+                                        <a href="#">Payment History</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T1004</td>
+                            <td>Emily Davis</td>
+                            <td>Retail</td>
+                            <td>555-456-7890</td>
+                            <td>emily.d@example.com</td>
+                            <td class="status-active">Active</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn">Actions</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" onclick="viewTenantDetails('T1004')">View Details</a>
+                                        <a href="#">Edit Tenant</a>
+                                        <a href="#">Send Message</a>
+                                        <a href="#">Payment History</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>T1005</td>
+                            <td>Robert Wilson</td>
+                            <td>Service</td>
+                            <td>555-567-8901</td>
+                            <td>robert.w@example.com</td>
+                            <td class="status-inactive">Inactive</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="dropbtn">Actions</button>
+                                    <div class="dropdown-content">
+                                        <a href="#" onclick="viewTenantDetails('T1005')">View Details</a>
+                                        <a href="#">Edit Tenant</a>
+                                        <a href="#">Send Message</a>
+                                        <a href="#">Payment History</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Tenant Details Modal -->
+    <div id="tenantModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Tenant Details</h2>
+            <div class="tenant-details" id="tenantDetailsContent">
+                <!-- Content will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        copyright@sagambalumsgabby
+    </footer>
+    
+    <script>
+        // Sample tenant data
+        const tenants = {
+            'T1001': {
+                name: 'John Smith',
+                businessType: 'Retail - Clothing Store',
+                phone: '555-123-4567',
+                email: 'john.smith@example.com',
+                status: 'Active',
+                leaseStart: '2022-01-15',
+                leaseEnd: '2024-01-14',
+                rentAmount: '$2,500/month',
+                property: 'Main Street Plaza, Unit 101',
+                emergencyContact: 'Jane Smith (555-987-6543)',
+                notes: 'Pays rent on time. Requires parking space.'
+            },
+            'T1002': {
+                name: 'Sarah Johnson',
+                businessType: 'Restaurant - Italian Cuisine',
+                phone: '555-234-5678',
+                email: 'sarah.j@example.com',
+                status: 'Active',
+                leaseStart: '2021-11-01',
+                leaseEnd: '2023-10-31',
+                rentAmount: '$4,200/month',
+                property: 'Riverside Mall, Unit 205',
+                emergencyContact: 'David Johnson (555-876-5432)',
+                notes: 'Renewal pending. Requests kitchen equipment upgrade.'
+            },
+            'T1003': {
+                name: 'Michael Brown',
+                businessType: 'Office - Accounting Firm',
+                phone: '555-345-6789',
+                email: 'michael.b@example.com',
+                status: 'Inactive',
+                leaseStart: '2020-05-10',
+                leaseEnd: '2022-05-09',
+                rentAmount: '$3,000/month',
+                property: 'Downtown Tower, Suite 304',
+                emergencyContact: 'Lisa Brown (555-765-4321)',
+                notes: 'Moved to larger space in same building.'
+            },
+            'T1004': {
+                name: 'Emily Davis',
+                businessType: 'Retail - Bookstore',
+                phone: '555-456-7890',
+                email: 'emily.d@example.com',
+                status: 'Active',
+                leaseStart: '2022-03-20',
+                leaseEnd: '2024-03-19',
+                rentAmount: '$2,800/month',
+                property: 'University Plaza, Unit 112',
+                emergencyContact: 'Mark Davis (555-654-3210)',
+                notes: 'New tenant. First payment received.'
+            },
+            'T1005': {
+                name: 'Robert Wilson',
+                businessType: 'Service - Hair Salon',
+                phone: '555-567-8901',
+                email: 'robert.w@example.com',
+                status: 'Inactive',
+                leaseStart: '2019-09-15',
+                leaseEnd: '2021-09-14',
+                rentAmount: '$3,500/month',
+                property: 'Greenfield Shopping Center, Unit 18',
+                emergencyContact: 'Anna Wilson (555-543-2109)',
+                notes: 'Business closed. Unit needs renovation.'
+            }
+        };
+        
+        // Calculate summary statistics
+        function calculateSummary() {
+            let total = 0;
+            let active = 0;
+            let inactive = 0;
+            let retail = 0;
+            let food = 0;
+            
+            for (const tenantId in tenants) {
+                total++;
+                if (tenants[tenantId].status === 'Active') {
+                    active++;
+                } else {
+                    inactive++;
+                }
+                
+                if (tenants[tenantId].businessType.includes('Retail')) {
+                    retail++;
+                } else if (tenants[tenantId].businessType.includes('Restaurant') || 
+                           tenants[tenantId].businessType.includes('Food')) {
+                    food++;
+                }
+            }
+            
+            document.getElementById('totalTenants').textContent = total;
+            document.getElementById('activeTenants').textContent = active;
+            document.getElementById('inactiveTenants').textContent = inactive;
+            document.getElementById('retailTenants').textContent = retail;
+            document.getElementById('foodTenants').textContent = food;
+        }
+        
+        // Search function
+        function searchTenants() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById('tenantsTable');
+            const tr = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < tr.length; i++) {
+                let found = false;
+                const td = tr[i].getElementsByTagName('td');
+                
+                for (let j = 0; j < td.length - 1; j++) { // Skip the last column (Actions)
+                    if (td[j]) {
+                        const txtValue = td[j].textContent || td[j].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                
+                tr[i].style.display = found ? '' : 'none';
+            }
+        }
+        
+        // View tenant details
+        function viewTenantDetails(tenantId) {
+            const tenant = tenants[tenantId];
+            if (!tenant) return;
+            
+            const modal = document.getElementById('tenantModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('tenantDetailsContent');
+            
+            title.textContent = `Tenant Details - ${tenant.name} (${tenantId})`;
+            
+            let html = `
+                <div class="detail-row">
+                    <div class="detail-label">Tenant ID:</div>
+                    <div class="detail-value">${tenantId}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Full Name:</div>
+                    <div class="detail-value">${tenant.name}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Business Type:</div>
+                    <div class="detail-value">${tenant.businessType}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Contact Phone:</div>
+                    <div class="detail-value">${tenant.phone}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email:</div>
+                    <div class="detail-value">${tenant.email}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Status:</div>
+                    <div class="detail-value ${tenant.status === 'Active' ? 'status-active' : 'status-inactive'}">${tenant.status}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Lease Period:</div>
+                    <div class="detail-value">${tenant.leaseStart} to ${tenant.leaseEnd}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Rent Amount:</div>
+                    <div class="detail-value">${tenant.rentAmount}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Property:</div>
+                    <div class="detail-value">${tenant.property}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Emergency Contact:</div>
+                    <div class="detail-value">${tenant.emergencyContact}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Notes:</div>
+                    <div class="detail-value">${tenant.notes}</div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+            modal.style.display = 'block';
+        }
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('tenantModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('tenantModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Calculate summary when page loads
+        window.onload = calculateSummary;
+    </script>
+</body>
+</html>

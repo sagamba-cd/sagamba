@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Management System - Payment Entry</title>
+    <style>
+        body {
+            background: #d2e5e7;
+            color: #000000;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        table.layout {
+            width: 80%;
+            height: 100%;
+            background: #b2e5e7;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+        table.form {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+        }
+        a {
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            background: rgb(0,80,0);
+            color: white;
+            padding: 10px;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        input[type="submit"] {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: auto;
+            padding: 10px 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        label {
+            display: block;
+            text-align: right;
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table class="layout" border="0">
+        <tr height="10%">
+            <th colspan="6"><img src="photo/desert.jpeg" alt="Header" style="height:30%; width:100%;"/></th>
+        </tr>
+        <tr height="10%">
+            <td><a href="tenantmanagementsystem.html" target="_blank">Home</a></td>
+            <td><a href="leaser.html" target="_blank">Leasers</a></td>
+            <td><a href="tenants.html" target="_blank">Tenant Portal</a></td>
+            <td><a href="property management.html" target="_blank">Property Management</a></td>
+            <td><a href="payment.html" target="_blank">Payment Gateway</a></td>
+            <td><a href="sigin.html" class="nav-link">Enter employee</a></td>
+           <td><a href="dashboard.html" class="nav-link">Dashboard</a></td>
+           <td><a href="landlords.html" class="nav-link">landlords</a></td>
+        </tr>
+        <tr height="70%">
+            <td colspan="2" width="15%">
+                <a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                    <img src="photo/news.jpeg" alt="News" style="height:100%; width:100%;"/>
+                </a>
+            </td>
+            <td rowspan="4" colspan="4" style="background:#a2e5e7;">
+                <h1>ENTER NEW PAYMENT VOUCHER</h1>
+                <form action="process_payment.php" method="post">
+                    <table class="form">
+                        <tr>
+                            <td><label>Amount Paid:</label></td>
+                            <td><input type="text" name="amount" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Payment Method:</label></td>
+                            <td>
+                                <select name="payment_method" required>
+                                    <option value="">Select Method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                    <option value="Credit Card">Credit Card</option>
+                                    <option value="Mobile Money">Mobile Money</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Payment Date:</label></td>
+                            <td><input type="date" name="payment_date" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Rent Period Start:</label></td>
+                            <td><input type="date" name="rent_start" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Rent Period End:</label></td>
+                            <td><input type="date" name="rent_end" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Property ID:</label></td>
+                            <td><input type="number" name="property_id" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Leaser ID:</label></td>
+                            <td><input type="number" name="leaser_id" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Tenant ID:</label></td>
+                            <td><input type="number" name="tenant_id" required/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Payment ID:</label></td>
+                            <td><input type="number" name="payment_id" required/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">
+                                <input type="submit" value="Submit Payment"/>
+                                <input type="reset" value="Clear Form" style="background-color: #f44336;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="#" target="_blank">
+                    <img src="photo/icon.gif" alt="Notification" style="height:60%; width:100%;"/>
+                    Notification
+                </a>
+            </td>
+        </tr>
+        <tr height="5%">
+            <td>
+                <a href="help.html" target="_blank">
+                    <img src="photo/help.gif" alt="Help" style="height:90%; width:100px;"/>
+                    HELP
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="footer" colspan="7">copyright © sagambalumsgabby</td>
+        </tr>
+    </table>
+</body>
+</html>

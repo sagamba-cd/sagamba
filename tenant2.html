@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Portal | Commercial Property Management</title>
+    <style>
+        :root {
+            --primary-color: #2c7873;
+            --secondary-color: #6fb98f;
+            --light-bg: #d2e5e7;
+            --dark-bg: #a2e5e7;
+            --dark-text: #000000;
+            --light-text: #ffffff;
+            --accent-color: #004d40;
+            --danger-color: #e74c3c;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .header-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            margin-right: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-btn:hover {
+            background-color: #003d30;
+        }
+        
+        .back-btn img {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+        
+        .nav-menu li {
+            margin: 0 10px;
+        }
+        
+        .nav-menu a {
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+        
+        .content-area {
+            display: flex;
+            min-height: 500px;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-bg);
+            padding: 20px;
+        }
+        
+        .stats-box {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .stats-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .sidebar-menu img {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+        }
+        
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-container input {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            border-right: none;
+            width: 200px;
+            transition: width 0.3s;
+        }
+        
+        .search-container input:focus {
+            outline: none;
+            width: 250px;
+        }
+        
+        .search-container button {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-container button:hover {
+            background-color: #003d30;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            flex-grow: 1;
+            max-width: 500px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .tenant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .tenant-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .tenant-table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tenant-table tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+        
+        .tenant-table tr:hover {
+            background-color: #e0f2f1;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background-color: #e6f7ee;
+            color: var(--success-color);
+        }
+        
+        .status-inactive {
+            background-color: #ffebee;
+            color: var(--danger-color);
+        }
+        
+        .status-pending {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+        
+        /* Dropdown Button */
+        .dropbtn {
+            background-color: var(--info-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        /* Dropdown container */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 120px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* Dropdown links */
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.85em;
+            transition: background-color 0.3s;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Change the background color of the dropdown button when the dropdown content is shown */
+        .dropdown:hover .dropbtn {
+            background-color: var(--accent-color);
+        }
+
+        /* Style for dropdown items */
+        .dropdown-view {
+            color: var(--info-color);
+        }
+
+        .dropdown-edit {
+            color: var(--warning-color);
+        }
+
+        .dropdown-delete {
+            color: var(--danger-color);
+        }
+
+        .dropdown-activate {
+            color: var(--success-color);
+        }
+        
+        .footer {
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            text-align: center;
+            padding: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+            
+            .stats-box {
+                width: 45%;
+                margin: 5px;
+            }
+            
+            .search-container {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .search-input {
+                max-width: 100%;
+            }
+            
+            nav {
+                flex-direction: column;
+            }
+            
+            .nav-left, .nav-right {
+                width: 100%;
+                justify-content: center;
+                margin: 5px 0;
+            }
+            
+            .back-btn {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            /* Mobile dropdown styles */
+            .dropdown-content {
+                position: static;
+                width: 100%;
+            }
+        
+            .dropdown:hover .dropdown-content {
+                display: none;
+            }
+        
+            .dropdown-content.show {
+                display: block;
+            }
+        
+            .dropbtn::after {
+                content: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="photo/desert.jpeg" class="header-img" alt="Commercial Property Management">
+        </header>
+        
+        <nav>
+            <div class="nav-left">
+                
+                <ul class="nav-menu">
+                    <li><a href="otherstaff.html">Home</a></li>
+                    <li><a href="leaser2.html">Leasers</a></li>
+                    <li><a href="tenant2.html" >Tenants Portal</a></li>
+                    <li><a href="PROPERTI.html">Property</a></li>
+                    <li><a href="paymento.html">Payments</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-right">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search tenants..." class="search-input">
+                    <button id="searchBtn" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="content-area">
+            <aside class="sidebar">
+                <div class="stats-box">
+                    <div class="stats-title">TOTAL TENANTS</div>
+                    <div class="stats-value" id="totalTenants">0</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">ACTIVE TENANTS</div>
+                    <div class="stats-value" id="activeTenants">0</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stats-title">INACTIVE TENANTS</div>
+                    <div class="stats-value" id="inactiveTenants">0</div>
+                </div>
+                
+                <ul class="sidebar-menu">
+                    <li><a href="https://www.radiyoyacuvoa.com/z/5294" target="_blank">
+                        <img src="photo/news.jpeg" alt="News"> News
+                    </a></li>
+                    <li><a href="notification.html">
+                        <img src="photo/icon.gif" alt="Notifications"> Notifications
+                    </a></li>
+                    <li><a href="#">
+                        <img src="photo/help.gif" alt="Help"> Help Center
+                    </a></li>
+                    <li><a href="logni.html">
+                        <img src="photo/logout.png" alt="Logout"> Logout
+                    </a></li>
+                </ul>
+            </aside>
+            
+            <main class="main-content">
+                <button id="addTenantBtn" class="btn btn-primary">Add Tenant</button>
+                <h1>TENANT PORTAL</h1>
+                <h2>TENANT MANAGEMENT</h2>
+                
+                <table class="tenant-table" id="tenantTable">
+                    <thead>
+                        <tr>
+                            <th>Tenant ID</th>
+                            <th>Name</th>
+                            <th>Business Type</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tenantTableBody">
+                        <!-- Sample data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </main>
+        </div>
+        
+        <footer class="footer">
+            &copy; 2023 Commercial Property Management System | sagambalumsgabby
+        </footer>
+    </div>
+
+    <script>
+        // Tenant data matching your table columns
+        const tenants = [
+            {
+                id: "TN-001",
+                name: "Gabby Sagamba",
+                businessType: "Retail Clothing",
+                phone: "+250 788 123 456",
+                email: "gabby@sagamba.com",
+                status: "Active"
+            },
+            {
+                id: "TN-002",
+                name: "John Doe",
+                businessType: "Tech Solutions",
+                phone: "+250 788 234 567",
+                email: "john@techsol.rw",
+                status: "Active"
+            },
+            {
+                id: "TN-003",
+                name: "Jane Smith",
+                businessType: "Coffee Shop",
+                phone: "+250 788 345 678",
+                email: "jane@coffee.rw",
+                status: "Inactive"
+            },
+            {
+                id: "TN-004",
+                name: "Michael Brown",
+                businessType: "Electronics",
+                phone: "+250 788 456 789",
+                email: "michael@electronics.rw",
+                status: "Pending"
+            },
+            {
+                id: "TN-005",
+                name: "Sarah Johnson",
+                businessType: "Beauty Salon",
+                phone: "+250 788 567 890",
+                email: "sarah@beauty.rw",
+                status: "Active"
+            }
+        ];
+
+        // DOM elements
+        const tenantTableBody = document.getElementById('tenantTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const addTenantBtn = document.getElementById('addTenantBtn');
+        const totalTenantsEl = document.getElementById('totalTenants');
+        const activeTenantsEl = document.getElementById('activeTenants');
+        const inactiveTenantsEl = document.getElementById('inactiveTenants');
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTenantTable(tenants);
+            updateStatistics();
+            
+            // Event listeners
+            searchBtn.addEventListener('click', performSearch);
+            addTenantBtn.addEventListener('click', addNewTenant);
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            // For mobile devices - dropdown toggle
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.dropbtn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const dropdown = this.nextElementSibling;
+                        dropdown.classList.toggle('show');
+                    });
+                });
+                
+                // Close dropdowns when clicking outside
+                window.addEventListener('click', function(e) {
+                    if (!e.target.matches('.dropbtn')) {
+                        const dropdowns = document.querySelectorAll('.dropdown-content');
+                        dropdowns.forEach(dropdown => {
+                            if (dropdown.classList.contains('show')) {
+                                dropdown.classList.remove('show');
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // Render tenant table with dropdown actions
+        function renderTenantTable(tenantsToRender) {
+            tenantTableBody.innerHTML = '';
+            
+            if (tenantsToRender.length === 0) {
+                tenantTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center;">No tenants found matching your search criteria</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tenantsToRender.forEach(tenant => {
+                const row = document.createElement('tr');
+                
+                // Determine status class
+                let statusClass = 'status-active';
+                if (tenant.status === 'Inactive') statusClass = 'status-inactive';
+                if (tenant.status === 'Pending') statusClass = 'status-pending';
+                
+                // Determine action text based on status
+                const actionText = tenant.status === 'Active' ? 'Deactivate' : 'Activate';
+                const actionClass = tenant.status === 'Active' ? 'dropdown-delete' : 'dropdown-activate';
+                
+                row.innerHTML = `
+                    <td>${tenant.id}</td>
+                    <td>${tenant.name}</td>
+                    <td>${tenant.businessType}</td>
+                    <td>${tenant.phone}</td>
+                    <td>${tenant.email}</td>
+                    <td><span class="status ${statusClass}">${tenant.status}</span></td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="dropbtn">Actions ▼</button>
+                            <div class="dropdown-content">
+                                <a href="#" class="dropdown-view" data-id="${tenant.id}">View</a>
+                                <a href="#" class="dropdown-edit" data-id="${tenant.id}">Edit</a>
+                                <a href="#" class="${actionClass}" data-id="${tenant.id}">${actionText}</a>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tenantTableBody.appendChild(row);
+            });
+            
+            // Add event listeners to dropdown actions
+            document.querySelectorAll('.dropdown-view').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    viewTenant(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.dropdown-edit').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    editTenant(this.getAttribute('data-id'));
+                });
+            });
+            
+            document.querySelectorAll('.dropdown-activate, .dropdown-delete').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    toggleTenantStatus(this.getAttribute('data-id'));
+                });
+            });
+            
+            updateStatistics();
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = tenants.length;
+            const active = tenants.filter(t => t.status === 'Active').length;
+            const inactive = tenants.filter(t => t.status === 'Inactive').length;
+            
+            totalTenantsEl.textContent = total;
+            activeTenantsEl.textContent = active;
+            inactiveTenantsEl.textContent = inactive;
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (!searchTerm.trim()) {
+                renderTenantTable(tenants);
+                return;
+            }
+            
+            const filteredTenants = tenants.filter(tenant => {
+                return (
+                    tenant.id.toLowerCase().includes(searchTerm) ||
+                    tenant.name.toLowerCase().includes(searchTerm) ||
+                    tenant.businessType.toLowerCase().includes(searchTerm) ||
+                    tenant.phone.includes(searchTerm) ||
+                    tenant.email.toLowerCase().includes(searchTerm) ||
+                    tenant.status.toLowerCase().includes(searchTerm)
+                );
+            });
+            
+            renderTenantTable(filteredTenants);
+        }
+
+        // View tenant details
+        function viewTenant(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                alert(`Tenant Details:\n\nID: ${tenant.id}\nName: ${tenant.name}\nBusiness: ${tenant.businessType}\nPhone: ${tenant.phone}\nEmail: ${tenant.email}\nStatus: ${tenant.status}`);
+            }
+        }
+
+        // Edit tenant
+        function editTenant(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                alert(`Editing tenant: ${tenant.name}\n\nThis would open an edit form in a real application.`);
+                // In a real app, this would open a modal with the tenant's details for editing
+            }
+        }
+
+        // Toggle tenant status
+        function toggleTenantStatus(tenantId) {
+            const tenant = tenants.find(t => t.id === tenantId);
+            if (tenant) {
+                const newStatus = tenant.status === 'Active' ? 'Inactive' : 'Active';
+                if (confirm(`Are you sure you want to set ${tenant.name} to ${newStatus}?`)) {
+                    tenant.status = newStatus;
+                    renderTenantTable(tenants);
+                    alert(`Tenant ${tenant.name} is now ${newStatus}`);
+                }
+            }
+        }
+
+        // Add new tenant
+        function addNewTenant() {
+            alert("This would open a form to add a new tenant in a real application.");
+            // In a real app, this would open a modal with a form to add a new tenant
+        }
+    </script>
+</body>
+</html>
